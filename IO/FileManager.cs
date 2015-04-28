@@ -44,9 +44,26 @@ namespace Bomberman.IO
                 saveIndex++;
             } while (File.Exists(savePath));
 
-            WriteSerializable(gameInfo, savePath);
+            WriteXmlSerializable(gameInfo, savePath);
         }
-        private static void WriteSerializable(IXmlSerializable xmlSerializable, string filePath)
+        private static void WriteSerializable(ISerializable serializable, string filePath)
+        {
+            FileStream stream = null;
+            try
+            {
+                stream = new FileStream(filePath, FileMode.Create);
+                IFormatter formatter = new SoapFormatter();
+                formatter.Serialize(stream, serializable);
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Close();
+            }
+
+            //TODO: remove file if error
+        }
+        private static void WriteXmlSerializable(IXmlSerializable xmlSerializable, string filePath)
         {
             FileStream stream = null;
             try

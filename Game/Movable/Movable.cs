@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Bomberman.Game.Serialization;
+using System.Xml.Serialization;
 
 namespace Bomberman.Game.Movable
 {
@@ -13,7 +15,7 @@ namespace Bomberman.Game.Movable
         Moves Direction { get; }
     }
 
-    abstract partial class MovableElement : DestroyableElement, IMovable
+    abstract partial class MovableElement : DestroyableElement, IMovable, IToInfo
     {
         public float InitialSpeed = 1;
         public float Speed { get { return (float)(InitialSpeed * SpeedModifier); } }
@@ -157,5 +159,16 @@ namespace Bomberman.Game.Movable
         }
 
         public MovableElement(Map.Map map) { _map = map; SpeedModifier = 1; }
+
+        public IXmlSerializable GetInfo()
+        {
+            var info = new MovableInfo();
+            info.X = X;
+            info.Y = Y;
+            info.Position = Position;
+            info.Type = GetType().ToString();
+
+            return info;
+        }
     }
 }

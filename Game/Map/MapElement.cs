@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Bomberman.Game.Items;
+using Bomberman.Game.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Bomberman.Game.Map
 {
-    abstract class MapElement : DestroyableElement
+    abstract class MapElement : DestroyableElement, IToInfo
     {
         public const int WIDTH = 900 / 15; //TODO: no magic numbers!!
         public const int HEIGHT = 900 / 15;
@@ -63,6 +64,11 @@ namespace Bomberman.Game.Map
             OccupyingElements.Clear();
 
             return pointsScored;
+        }
+
+        public System.Xml.Serialization.IXmlSerializable GetInfo()
+        {
+            throw new NotImplementedException();
         }
     }
 

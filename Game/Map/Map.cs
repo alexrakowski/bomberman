@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Bomberman.Game.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Bomberman.Game.Map
 {
-    partial class Map : IDrawable
+    partial class Map : IDrawable, IToInfo
     {
         public const short MAP_WIDTH = 15;
         public const short MAP_HEIGHT = 9;
@@ -114,6 +115,26 @@ namespace Bomberman.Game.Map
         private Map(MapElement[,] elements, int x, int y) { 
             _mapElements = elements;
             startPosition = new Tuple<int, int>(x, y);
+        }
+
+        public System.Xml.Serialization.IXmlSerializable GetInfo()
+        {
+            int width = _mapElements.GetUpperBound(0) + 1;
+            int height = _mapElements.GetUpperBound(1) + 1;
+            var squareInfos = new MapElementInfo[width, height];
+
+            for (int x = 0; x < width; ++x)
+            {
+                for (int y = 0; y < height; ++y)
+                {
+                    squareInfos[x, y] = (MapElementInfo)_mapElements[x, y].GetInfo();
+                }
+            }
+
+            var info = new MapInfo(squareInfos);
+            info.StartPosition = this.startPosition;
+
+            return info;
         }
     }
 }

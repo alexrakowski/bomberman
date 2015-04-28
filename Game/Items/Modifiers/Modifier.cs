@@ -7,6 +7,7 @@ using Bomberman.Game.Items;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Bomberman.Game.Serialization;
 
 namespace Bomberman.Game.Items.Modifiers
 {
@@ -54,6 +55,14 @@ namespace Bomberman.Game.Items.Modifiers
         public override Texture2D GetTexture()
         {
             return Modifier.TEXTURE;
+        }
+    }
+    abstract partial class Modifier : IToInfo
+    {
+
+        public System.Xml.Serialization.IXmlSerializable GetInfo()
+        {
+            throw new NotImplementedException();
         }
     }
 }

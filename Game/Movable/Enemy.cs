@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Bomberman.Game.Map;
 using System.Text;
+using Bomberman.Game.Serialization;
 
 namespace Bomberman.Game.Movable
 {

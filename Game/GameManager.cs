@@ -10,6 +10,7 @@ using Bomberman.Game.Items;
 using Bomberman.Game.Map;
 using Bomberman.Game.Movable;
 using Bomberman.Game.Items.Modifiers;
+using Bomberman.Game.Serialization;
 
 namespace Bomberman.Game
 {
@@ -143,10 +144,22 @@ namespace Bomberman.Game
         }
         public GameState GetGameState()
         {
-            GameState gameState = new GameState(GameInfo, _adventurer, _enemies, _bombs, _modifiers, _map);
+            GameState gameState = ConstructGameState();
             return gameState;
         }
+        private GameState ConstructGameState()
+        {
+            GameState gameState = new GameState();
 
+            gameState.GameInfo = GameInfo;
+            gameState.Player = _adventurer.GetInfo();
+            gameState.Enemies = _enemies.Select(enemy => enemy.GetInfo()).ToList();
+            gameState.Map = _map.GetInfo();
+            gameState.Modifiers = _modifiers.Select(modifier => modifier.GetInfo()).ToList();
+            gameState.Bombs = _bombs.Select(bomb => bomb.GetInfo()).ToList();
+
+            return gameState;
+        }
 
         private Map.Map LoadMap(GameLevels level)
         {

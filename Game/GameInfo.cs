@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Bomberman.Game
 {
-    partial class GameInfo : IXmlSerializable
+    public partial class GameInfo : IXmlSerializable
     {
         public int Score;
         public int Time;
@@ -27,7 +27,6 @@ namespace Bomberman.Game
             Score = 0;
             Time = 1000;
             Lifes = 3;
-            PlayerName = playerName;
             Level = level;
  
             mapFragmentsFound = new int[2] { 0, fragmentsToFind };
@@ -45,17 +44,12 @@ namespace Bomberman.Game
 
         public void WriteXml(System.Xml.XmlWriter writer)
         {
-            throw new NotImplementedException();
-        }
-    }
-    [Serializable]
-    class Car : ISerializable
-    {
-        int value = 1;
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("Value", value, typeof(int));
+            writer.WriteElementString("Score", Score.ToString());
+            writer.WriteElementString("Time", Time.ToString());
+            writer.WriteElementString("Lifes", Lifes.ToString());
+            writer.WriteElementString("Level", ((int)Level).ToString());
+            writer.WriteElementString("MapFragmentsFound", mapFragmentsFound[0].ToString());
+            writer.WriteElementString("MapFragmentsToFind", mapFragmentsFound[1].ToString());
         }
     }
 

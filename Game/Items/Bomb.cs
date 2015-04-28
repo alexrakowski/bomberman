@@ -7,6 +7,7 @@ using Bomberman.Game.Map;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Bomberman.Game.Serialization;
 
 
 namespace Bomberman.Game.Items
@@ -121,6 +122,15 @@ namespace Bomberman.Game.Items
             this.X = x;
             this.Y = y;
             this.Position = position;
+        }
+    }
+
+    partial class Bomb : IToInfo
+    {
+
+        public System.Xml.Serialization.IXmlSerializable GetInfo()
+        {
+            throw new NotImplementedException();
         }
     }
 }
