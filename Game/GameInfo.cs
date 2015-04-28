@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Xml.Serialization;
 using Bomberman.Game.Items.Modifiers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -9,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Bomberman.Game
 {
-    partial class GameInfo : ISerializable
+    partial class GameInfo : IXmlSerializable
     {
         public int Score;
         public int Time;
@@ -17,19 +18,10 @@ namespace Bomberman.Game
         string PlayerName;
         public GameLevels Level;
 
-        Modifier[] Modifiers;
-        Tuple<int, int> PlayerPosition;
-        Movable.Enemy[] Enemies;
-        Items.Bomb[] Bombs;
         int [] mapFragmentsFound;
         public int foundFragments { get { return mapFragmentsFound[0]; } private set { return; } }
         public int fragmentsToFind { get { return mapFragmentsFound[1]; } private set { return; } }
-        Map.Map Map;
 
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            throw new NotImplementedException();
-        }
         public GameInfo(string playerName, int fragmentsToFind, GameLevels level)
         {
             Score = 0;
@@ -37,13 +29,33 @@ namespace Bomberman.Game
             Lifes = 3;
             PlayerName = playerName;
             Level = level;
-
-            Modifiers = null;
-            PlayerPosition = null;
-            Enemies = null;
-            Bombs = null;
+ 
             mapFragmentsFound = new int[2] { 0, fragmentsToFind };
-            Map = null;
+        }
+
+        public System.Xml.Schema.XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(System.Xml.XmlReader reader)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WriteXml(System.Xml.XmlWriter writer)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    [Serializable]
+    class Car : ISerializable
+    {
+        int value = 1;
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Value", value, typeof(int));
         }
     }
 

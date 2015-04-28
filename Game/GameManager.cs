@@ -141,6 +141,13 @@ namespace Bomberman.Game
 
             _modifiers = new List<Modifier>();
         }
+        public GameState GetGameState()
+        {
+            GameState gameState = new GameState(GameInfo, _adventurer, _enemies, _bombs, _modifiers, _map);
+            return gameState;
+        }
+
+
         private Map.Map LoadMap(GameLevels level)
         {
             var mapFile = _iGame.LoadMapFile(((int)level + 1).ToString());

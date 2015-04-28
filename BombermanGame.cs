@@ -12,7 +12,6 @@ using Microsoft.Xna.Framework.Media;
 using Bomberman.Utils;
 using Bomberman.Game.Movable;
 using Bomberman.IO;
-using System.Runtime.Serialization;
 
 namespace Bomberman
 {
@@ -211,8 +210,8 @@ namespace Bomberman
 
         public void SaveGame()
         {
-            ISerializable gameInfo = null;
-            FileManager.SaveGameFile(gameInfo, "Alek");
+            var gameState = _GameManager.GetGameState();
+            FileManager.SaveGameFile(gameState, "Alek");
         }
 
         public void LoadGame()

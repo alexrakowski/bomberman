@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Soap;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -30,7 +31,7 @@ namespace Bomberman.IO
         }
 
         const string SAVES_PATH = FILES_PREF + "/Saves/";
-        public static void SaveGameFile(ISerializable gameInfo, string playerName)
+        public static void SaveGameFile(IXmlSerializable gameInfo, string playerName)
         {
             string dirPath = SAVES_PATH + playerName;
             Directory.CreateDirectory(dirPath);
@@ -40,25 +41,27 @@ namespace Bomberman.IO
             do
             {
                 savePath = dirPath + "/" + saveIndex.ToString() + ".sav";
+                saveIndex++;
             } while (File.Exists(savePath));
 
             WriteSerializable(gameInfo, savePath);
         }
-        private static void WriteSerializable(ISerializable serializable, string filePath)
+        private static void WriteSerializable(IXmlSerializable xmlSerializable, string filePath)
         {
-            System.IO.TextWriter writer = null;
-
+            FileStream stream = null;
             try
             {
-                writer = new System.IO.StreamWriter(filePath);
-                XmlSerializer serializer = new XmlSerializer(serializable.GetType());
-                serializer.Serialize(writer, serializable);
+                stream = new FileStream(filePath, FileMode.Create);
+                var serializer = new XmlSerializer(xmlSerializable.GetType());
+                serializer.Serialize(stream, xmlSerializable);
             }
             finally
             {
-                if (writer != null)
-                    writer.Close();
+                if (stream != null)
+                    stream.Close();
             }
+
+            //TODO: remove file if error
         }
     }
 }
