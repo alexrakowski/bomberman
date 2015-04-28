@@ -121,8 +121,9 @@ namespace Bomberman.Game.Map
                     }
                     var square = containers[i];
                     var pos = square.Position;
-                    var modifier = i % 2 == 0 ? ModifierFactory.GetRandomPositiveModifier(pos) : ModifierFactory.GetRandomNegativeModifier(pos);
-                    square.AddCollectable(modifier);
+                    var modifier = i % 2 == 0 ? ModifierFactory.GetRandomPositiveModifier() : ModifierFactory.GetRandomNegativeModifier();
+                    var bonus = new Bonus(pos, modifier);
+                    square.AddCollectable(bonus);
                     containers.Remove(square);
                 }
             }

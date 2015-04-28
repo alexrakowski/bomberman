@@ -66,9 +66,13 @@ namespace Bomberman.Game.Map
             return pointsScored;
         }
 
-        public System.Xml.Serialization.IXmlSerializable GetInfo()
+        public override System.Xml.Serialization.IXmlSerializable GetInfo()
         {
-            throw new NotImplementedException();
+            MapElementInfo info = new MapElementInfo(X, Y, Position, GetType().Name);
+            if (Collectable != null)
+                info.Collectable = (CollectableInfo) this.Collectable.GetInfo();
+
+            return info;
         }
     }
 

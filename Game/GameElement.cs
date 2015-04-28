@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Serialization;
+using Bomberman.Game.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,7 +11,7 @@ namespace Bomberman.Game
 {
     
 
-    abstract class GameElement : Element, IPlaysSound
+    abstract class GameElement : Element, IPlaysSound, IToInfo
     {
         /* X, Y - indexes of the square occupied by the Element. Discrete values.*/
         public int X;
@@ -22,5 +24,8 @@ namespace Bomberman.Game
             this.Y = square.Y;
         }
         public void PlaySound() { throw new NotImplementedException(); }
+
+        public abstract IXmlSerializable GetInfo();
+
     }
 }

@@ -9,13 +9,13 @@ namespace Bomberman.Game.Items.Modifiers
 {
     static class ModifierFactory
     {
-        public static Modifier GetRandomPositiveModifier(Vector2 position)
+        public static Modifier GetRandomPositiveModifier()
         {
-            return new NewLife(position);
+            return new NewLife();
         }
-        public static Modifier GetRandomNegativeModifier(Vector2 position)
+        public static Modifier GetRandomNegativeModifier()
         {
-            return new PositiveModifiers.NewLife(position);
+            return new PositiveModifiers.NewLife();
         }
     }
 }

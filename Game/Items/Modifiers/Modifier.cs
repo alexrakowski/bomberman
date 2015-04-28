@@ -11,7 +11,7 @@ using Bomberman.Game.Serialization;
 
 namespace Bomberman.Game.Items.Modifiers
 {
-    abstract partial class Modifier : CollectableElement
+    abstract partial class Modifier
     {
         public int Time { get; protected set; }
         public void Apply(GameInfo gameInfo, List<Enemy> enemies, Adventurer adventurer)
@@ -30,39 +30,17 @@ namespace Bomberman.Game.Items.Modifiers
 
         protected abstract void OnApply(GameInfo gameInfo, List<Movable.Enemy> enemies, Movable.Adventurer adventurer);
         protected abstract void OnTimeEnded(GameInfo gameInfo, List<Enemy> enemies, Adventurer adventurer);
-        protected abstract void SetTime();
-
-        public override void Collect(ICollector collector)
-        {
-            collector.AddModifier(this);
-        }
-
-        public Modifier(Vector2 position) : base(position) { }
+        protected abstract void SetTime();       
     }
-    abstract partial class Modifier
-    {
-        public const string ASSET_NAME = "textures/items/bonus";
-        private static Texture2D TEXTURE;
 
-        public override void LoadContent(ContentManager content)
-        {
-            TEXTURE = content.Load<Texture2D>(Modifier.ASSET_NAME);
-        }
-        public static void LoadClassContent(ContentManager content)
-        {
-            TEXTURE = content.Load<Texture2D>(Modifier.ASSET_NAME);
-        }
-        public override Texture2D GetTexture()
-        {
-            return Modifier.TEXTURE;
-        }
-    }
     abstract partial class Modifier : IToInfo
     {
 
         public System.Xml.Serialization.IXmlSerializable GetInfo()
         {
-            throw new NotImplementedException();
+            var info = new ModifierInfo(Time, GetType().Name);
+
+            return info;
         }
     }
 }

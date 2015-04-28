@@ -14,10 +14,5 @@ namespace Bomberman.Game.Items
         {
             this.Position = position;
         }
-
-        public System.Xml.Serialization.IXmlSerializable GetInfo()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

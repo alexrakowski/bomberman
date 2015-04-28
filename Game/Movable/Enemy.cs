@@ -102,5 +102,12 @@ namespace Bomberman.Game.Movable
             this.Y = startSquare.Y;
             startSquare.Occupy(this);
         }
+
+        public override System.Xml.Serialization.IXmlSerializable GetInfo()
+        {
+            var info = new EnemyInfo(X, Y, Position, GetType().Name);
+
+            return info;
+        }
     }
 }

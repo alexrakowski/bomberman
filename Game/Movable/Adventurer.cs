@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Bomberman.Game.Items;
+using Bomberman.Game.Serialization;
 
 namespace Bomberman.Game.Movable
 {
@@ -36,6 +37,7 @@ namespace Bomberman.Game.Movable
         }
 
         private List<Bomb> _bombs;
+        public int BombsLimit { get; set; }
 
         private void PutBomb()
         {
@@ -56,7 +58,7 @@ namespace Bomberman.Game.Movable
         }
         public override void Move(int elapsedTime, Moves move)
         {
-            if (move == Moves.Fire)
+            if (move == Moves.Fire && _bombs.Count < BombsLimit)
             {
                 PutBomb();
                 return;
@@ -131,6 +133,7 @@ namespace Bomberman.Game.Movable
             : base(map)
         {
             this._bombs = bombs;
+            this.BombsLimit = 2;
 
             var startSquare = this._map.GetStartSquare();
             this.X = startSquare.X;
@@ -140,6 +143,15 @@ namespace Bomberman.Game.Movable
 
             this.InitialSpeed = 0.2f;
             this.IsMoving = false;
+        }
+    }
+
+    partial class Adventurer
+    {
+        public override System.Xml.Serialization.IXmlSerializable GetInfo()
+        {
+            var info = new AdventurerInfo(X, Y, Position, GetType().Name);
+            return info;
         }
     }
 }

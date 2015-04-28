@@ -13,7 +13,7 @@ namespace Bomberman.Game
     public partial class GameInfo : IXmlSerializable
     {
         public int Score;
-        public int Time;
+        public double Time;
         public int Lifes;
         string PlayerName;
         public GameLevels Level;
@@ -29,6 +29,16 @@ namespace Bomberman.Game
             Lifes = 3;
             Level = level;
  
+            mapFragmentsFound = new int[2] { 0, fragmentsToFind };
+        }
+
+        public GameInfo(string playerName, int fragmentsToFind, GameLevels level, int score, int lifes)
+        {
+            Score = score;
+            Time = 1000;
+            Lifes = lifes;
+            Level = level;
+
             mapFragmentsFound = new int[2] { 0, fragmentsToFind };
         }
 
@@ -87,6 +97,17 @@ namespace Bomberman.Game
         public void AddPoints(int pointsToAdd)
         {
             this.Score += pointsToAdd;
+        }
+
+        public bool ElapseTime(int elapsedTime)
+        {
+            this.Time -= (double)elapsedTime / 1000;
+            return this.Time < 1;
+        }
+
+        public void NextLevel()
+        {
+            this.Level = (GameLevels)((int)Level + 1);
         }
     }
 }

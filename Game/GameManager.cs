@@ -22,13 +22,17 @@ namespace Bomberman.Game
         private List<Items.Bomb> _bombs;
         private List<Modifier> _modifiers;
 
-        public GameInfo GameInfo { get; private set; }
+        public GameInfo _gameInfo;
         private GamePanel _gamePanel;
 
         public bool HasPlayerLost() { throw new NotImplementedException(); }
 
         public void Update(int elapsedTime, Moves move)
         {
+            if (_gameInfo.ElapseTime(elapsedTime))
+            {
+                throw new NotImplementedException();
+            }
             //move movables
             _adventurer.Move(elapsedTime, move);
             var collectable = _adventurer.PickCollectable();
@@ -49,7 +53,7 @@ namespace Bomberman.Game
         {
             foreach (var modifier in _modifiers)
             {
-                modifier.Update(elapsedTime, GameInfo, _enemies, _adventurer);
+                modifier.Update(elapsedTime, _gameInfo, _enemies, _adventurer);
             }
         }
         private void UpdateBombs(int elapsedTime)
@@ -63,7 +67,7 @@ namespace Bomberman.Game
                 }
             }
 
-            GameInfo.AddPoints(pointsScored);
+            _gameInfo.AddPoints(pointsScored);
         }
         private void CleanupTheDead()
         {
@@ -77,7 +81,7 @@ namespace Bomberman.Game
         }
         private void OnLifeLoss()
         {
-            if (GameInfo.LoseLife())
+            if (_gameInfo.LoseLife())
             {
                 throw new NotImplementedException();
             }
@@ -93,15 +97,15 @@ namespace Bomberman.Game
     {
         public void AddMapFragment()
         {
-            if (GameInfo.AddMapFragment())
+            if (_gameInfo.AddMapFragment())
             {
                 // found all map fragments
-                throw new NotImplementedException();
+                StartNextLevel();
             }
         }
         public void AddModifier(Modifier modifier)
         {
-            modifier.Apply(GameInfo, _enemies, _adventurer);
+            modifier.Apply(_gameInfo, _enemies, _adventurer);
             if (_modifiers == null)
             {
                 _modifiers = new List<Modifier>();
@@ -130,29 +134,43 @@ namespace Bomberman.Game
     {
         public void NewGame(string playerName)
         {
-            var level = GameLevels.First;
-            int fragmentsToFind = GetMapFragmentsToFind(level);
-            this.GameInfo = new Game.GameInfo(playerName, fragmentsToFind, level);
-            _map = LoadMap(level);
-            _bombs = new List<Items.Bomb>();
-            _adventurer = Game.Movable.Adventurer.GetNewInstance(_map, _bombs);
+            var level = GameLevels.First; 
+            _gameInfo = null;
 
-            _enemies = new List<Movable.Enemy>();
-            AddEnemies(level, _map);
-
+            StartLevel(level);
+        }
+        private void StartLevel(GameLevels level)
+        {
             _modifiers = new List<Modifier>();
+            _bombs = new List<Items.Bomb>();
+
+            _map = LoadMap(level);
+
+            LevelFactory.CreateLevel(level, _map, ref _gameInfo, out _enemies);
+            _adventurer = Game.Movable.Adventurer.GetNewInstance(_map, _bombs);
         }
         public GameState GetGameState()
         {
             GameState gameState = ConstructGameState();
             return gameState;
         }
+
+        private void StartNextLevel()
+        {
+            if (_gameInfo.Level == GameLevels.Third)
+            {
+                // somebody has won the game, nice!
+                throw new NotImplementedException();
+            }
+            _gameInfo.NextLevel();
+            StartLevel(_gameInfo.Level);
+        }
         private GameState ConstructGameState()
         {
             GameState gameState = new GameState();
 
-            gameState.GameInfo = GameInfo;
-            gameState.Player = _adventurer.GetInfo();
+            gameState.GameInfo = _gameInfo;
+            gameState.Player = (AdventurerInfo) _adventurer.GetInfo();
             gameState.Enemies = _enemies.Select(enemy => enemy.GetInfo()).ToList();
             gameState.Map = _map.GetInfo();
             gameState.Modifiers = _modifiers.Select(modifier => modifier.GetInfo()).ToList();
@@ -160,7 +178,6 @@ namespace Bomberman.Game
 
             return gameState;
         }
-
         private Map.Map LoadMap(GameLevels level)
         {
             var mapFile = _iGame.LoadMapFile(((int)level + 1).ToString());
@@ -168,81 +185,14 @@ namespace Bomberman.Game
 
             return map;
         }
-        private int GetMapFragmentsToFind(GameLevels level)
-        {
-            switch (level)
-            {
-                case GameLevels.First:
-                    return 3;
-                case GameLevels.Second:
-                    return 4;
-                case GameLevels.Third:
-                    return 5;
-                default:
-                    return 3;
-            }
-        }
-        private void AddEnemies(GameLevels level, Map.Map map)
-        {
-            int wolvesCount = 0;
-            int owlsCount = 0;
-            int foxesCount = 0;
-            int bearsCount = 0;
-
-            switch (level)
-            {
-                case GameLevels.First:
-                    wolvesCount = 4;
-                    owlsCount = 2;
-                    break;
-                case GameLevels.Second:
-                    wolvesCount = 3;
-                    owlsCount = 3;
-                    foxesCount = 1;
-                    bearsCount = 1;
-                    break;
-                case GameLevels.Third:
-                    wolvesCount = 2;
-                    owlsCount = 2;
-                    foxesCount = 4;
-                    bearsCount = 3;
-                    break;
-                default:
-                    wolvesCount = 4;
-                    owlsCount = 2;
-                    break;
-            }
-
-            var freeSquares = map.GetUnoccupiedSquares();
-            var adventurerSquare = map.GetStartSquare();
-
-            Utils.Shuffler.Shuffle(freeSquares);
-
-            MapElement square;
-            for (int i = 0; i < wolvesCount; ++i)
-            {
-                // put enemies in a distance from adventurer's starting point
-                do
-                {
-                    if (freeSquares.Count < 1)
-                    {
-                        throw new BombermanException("Not enough space for the enemies");
-                    }
-                    square = freeSquares.First();
-                    freeSquares.Remove(square);
-                } while (Map.Map.GetSquaresDistance(square, adventurerSquare) < 5);
-
-                var wolf = new Wolf(map, square);
-                _enemies.Add(wolf);
-            }
-        }
+        
     }
     //drawing
     partial class GameManager
     {
         public void Draw(SpriteBatch spriteBatch)
         {
-            _gamePanel.Draw(spriteBatch, GameInfo);
+            _gamePanel.Draw(spriteBatch, _gameInfo);
 
             _map.Draw(spriteBatch);
             _adventurer.Draw(spriteBatch);
@@ -268,7 +218,7 @@ namespace Bomberman.Game
         {
             Bomb.LoadClassContent(content);
             MapFragment.LoadClassContent(content);
-            Modifier.LoadClassContent(content);
+            Bonus.LoadClassContent(content);
         }
     }
 }

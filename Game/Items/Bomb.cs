@@ -43,6 +43,7 @@ namespace Bomberman.Game.Items
                 var texture = Bomb.FIRE_TEXTURE;
                 foreach (var firePos in AffectedPositions)
                 {
+                    if (firePos == this.Position) continue;
                     var rectangle = new Rectangle((int)firePos.X, (int)firePos.Y, MapElement.WIDTH, MapElement.HEIGHT);
                     spriteBatch.Draw(texture, rectangle, Color.White);
                 }
@@ -128,9 +129,11 @@ namespace Bomberman.Game.Items
     partial class Bomb : IToInfo
     {
 
-        public System.Xml.Serialization.IXmlSerializable GetInfo()
+        public override System.Xml.Serialization.IXmlSerializable GetInfo()
         {
-            throw new NotImplementedException();
+            var info = new BombInfo(X, Y, Position, GetType().Name, _time, _explosionTime, HasExploded);
+
+            return info;
         }
     }
 }

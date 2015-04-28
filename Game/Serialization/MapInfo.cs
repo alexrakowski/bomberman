@@ -6,19 +6,30 @@ using System.Xml.Serialization;
 
 namespace Bomberman.Game.Serialization
 {
-    class MapInfo : GameElementInfo
+    class MapInfo : IXmlSerializable
     {
         public MapElementInfo[,] Squares;
         public Tuple<int, int> StartPosition;
 
         public MapInfo(MapElementInfo[,] squares) { this.Squares = squares; }
 
-        public override void ReadXml(System.Xml.XmlReader reader)
+        public void ReadXml(System.Xml.XmlReader reader)
         {
             throw new NotImplementedException();
         }
 
-        public override void WriteXml(System.Xml.XmlWriter writer)
+        public void WriteXml(System.Xml.XmlWriter writer)
+        {
+            writer.WriteElementString("StartPosition", StartPosition.ToString());
+            foreach (var squareInfo in Squares)
+            {
+                writer.WriteStartElement("MapElement");
+                squareInfo.WriteXml(writer);
+                writer.WriteEndElement();
+            }
+        }
+
+        public System.Xml.Schema.XmlSchema GetSchema()
         {
             throw new NotImplementedException();
         }

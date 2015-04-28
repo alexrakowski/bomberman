@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace Bomberman.Game.Serialization
 {
-    public abstract class CollectableInfo : GameElementInfo
+    public abstract class MovableElementInfo : GameElementInfo
     {
         public override void ReadXml(System.Xml.XmlReader reader)
         {
@@ -16,6 +16,6 @@ namespace Bomberman.Game.Serialization
 
         public abstract void WriteXml(System.Xml.XmlWriter writer);
 
-        public CollectableInfo(int X, int Y, Vector2 Position, string Type) : base(X, Y, Position, Type) { }
+        public MovableElementInfo(int X, int Y, Vector2 Position, string Type) : base(X,Y, Position, Type) {}
     }
 }

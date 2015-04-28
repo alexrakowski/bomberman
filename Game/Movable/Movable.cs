@@ -15,7 +15,7 @@ namespace Bomberman.Game.Movable
         Moves Direction { get; }
     }
 
-    abstract partial class MovableElement : DestroyableElement, IMovable, IToInfo
+    abstract partial class MovableElement : DestroyableElement, IMovable
     {
         public float InitialSpeed = 1;
         public float Speed { get { return (float)(InitialSpeed * SpeedModifier); } }
@@ -159,16 +159,5 @@ namespace Bomberman.Game.Movable
         }
 
         public MovableElement(Map.Map map) { _map = map; SpeedModifier = 1; }
-
-        public IXmlSerializable GetInfo()
-        {
-            var info = new MovableInfo();
-            info.X = X;
-            info.Y = Y;
-            info.Position = Position;
-            info.Type = GetType().ToString();
-
-            return info;
-        }
     }
 }

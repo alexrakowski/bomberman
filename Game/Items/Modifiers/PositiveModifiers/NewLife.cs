@@ -22,7 +22,5 @@ namespace Bomberman.Game.Items.Modifiers.PositiveModifiers
         {
             Time = 0;
         }
-
-        public NewLife(Vector2 position) : base(position) { }
     }
 }

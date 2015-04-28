@@ -82,7 +82,9 @@ namespace Bomberman.Game
                 case InfoTypes.Lifes:
                     return gameInfo.Lifes.ToString();
                 case InfoTypes.Time:
-                    return "";
+                    string formattedTime = "";
+                    int time = (int)gameInfo.Time;
+                    return string.Format("{0}:{1:00}", time / 60, time % 60);
                 case InfoTypes.Level:
                     return "Level: " + ((int)gameInfo.Level + 1);
                 default:

@@ -14,7 +14,7 @@ namespace Bomberman.Game.Serialization
     public class GameState : IXmlSerializable
     {
         public IXmlSerializable GameInfo;
-        public IXmlSerializable Player;
+        public AdventurerInfo Player;
         public List<IXmlSerializable> Enemies;
         public IXmlSerializable Map;
         public List<IXmlSerializable> Modifiers;
@@ -42,15 +42,39 @@ namespace Bomberman.Game.Serialization
             this.GameInfo.WriteXml(writer);
             writer.WriteEndElement();
 
-            writer.WriteStartElement("GameInfo");
+            writer.WriteStartElement("Adventurer");
             this.Player.WriteXml(writer);
             writer.WriteEndElement();
 
             writer.WriteStartElement("Enemies");
             foreach (var enemyInfo in Enemies)
             {
+                writer.WriteStartElement("Enemy");
                 enemyInfo.WriteXml(writer);
+                writer.WriteEndElement();                
             }
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("Bombs");
+            foreach (var bomb in Bombs)
+            {
+                writer.WriteStartElement("Bomb");
+                bomb.WriteXml(writer);
+                writer.WriteEndElement();                
+            }
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("Modifiers");
+            foreach (var modifier in Modifiers)
+            {
+                writer.WriteStartElement("Modifier");
+                modifier.WriteXml(writer);
+                writer.WriteEndElement();                
+            }
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("Map");
+            this.Map.WriteXml(writer);
             writer.WriteEndElement();
         }
     }

@@ -16,6 +16,10 @@ namespace Bomberman.IO
         public static string[][] LoadMapFile(string mapName)
         {
             string mapPath = MAPS_PATH + mapName + ".csv";
+            if (!File.Exists(mapPath))
+            {
+                throw new BombermanException("Map File " + mapPath + " does not exist");
+            }
             var reader = new StreamReader(File.OpenRead(mapPath));
 
             List<string[]> lines = new List<string[]>();
