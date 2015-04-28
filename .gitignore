@@ -1,0 +1,15 @@
+*.exe
+*.pdb
+*.xnb
+*.spritefont
+*.png
+*.bmp
+*.csproj
+Bomberman.csproj.Debug.cachefile
+*.user
+Game.ico
+obj/x86/Debug/Bomberman.csproj.FileListAbsolute.txt
+*.cache
+obj/x86/Debug/cachefile-{E487FC49-DB88-4685-A7A7-E05907421E36}-targetpath.txt
+obj/x86/Debug/ContentPipeline-{E487FC49-DB88-4685-A7A7-E05907421E36}.xml
+obj/x86/Debug/Microsoft.Xna.Framework.RuntimeProfile.txt

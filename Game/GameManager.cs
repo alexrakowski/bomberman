@@ -173,12 +173,26 @@ namespace Bomberman.Game
             }
 
             var freeSquares = map.GetUnoccupiedSquares();
+            var adventurerSquare = map.GetStartSquare();
+
+            Utils.Shuffler.Shuffle(freeSquares);
+
+            MapElement square;
             for (int i = 0; i < wolvesCount; ++i)
             {
-                var square = freeSquares[0];
+                // put enemies in a distance from adventurer's starting point
+                do
+                {
+                    if (freeSquares.Count < 1)
+                    {
+                        throw new BombermanException("Not enough space for the enemies");
+                    }
+                    square = freeSquares.First();
+                    freeSquares.Remove(square);
+                } while (Map.Map.GetSquaresDistance(square, adventurerSquare) < 5);
+
                 var wolf = new Wolf(map, square);
                 _enemies.Add(wolf);
-                freeSquares.Remove(square);
             }
         }
     }

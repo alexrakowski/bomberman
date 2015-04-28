@@ -41,7 +41,8 @@ namespace Bomberman.Game.Movable
         {
             var bomb = new Bomb(X, Y, Position);
             _bombs.Add(bomb);
-            _map.OccupySquare(bomb);
+            var square = _map.OccupySquare(bomb);
+            bomb.Position = square.Position;
         }
         public void PickCollectable(GameManager gameManager)
         {
@@ -58,7 +59,7 @@ namespace Bomberman.Game.Movable
         }
         public override void Move(int elapsedTime, Moves move)
         {
-            if (move == Moves.Fire && !this.IsMoving)
+            if (move == Moves.Fire)
             {
                 PutBomb();
                 return;

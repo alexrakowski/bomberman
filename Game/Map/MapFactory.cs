@@ -78,13 +78,13 @@ namespace Bomberman.Game.Map
 
             private static void AddCollectables(Map map, GameLevels level)
             {
-                List<MapElement> destroyables = new List<MapElement>();
+                List<MapElement> containers = new List<MapElement>();
 
                 foreach (var square in map._mapElements)
                 {
-                    if (square.CanBeDestroyed)
+                    if (square.IsContainerTerrain)
                     {
-                        destroyables.Add(square);
+                        containers.Add(square);
                     }
                 }
 
@@ -102,13 +102,13 @@ namespace Bomberman.Game.Map
                         break;
                 }
 
-                var rand = new Random();
+                Utils.Shuffler.Shuffle(containers);
                 for (int i = 0; i < mapFragmentsCount; ++i)
                 {
-                    var square = destroyables[rand.Next() % destroyables.Count];
+                    var square = containers[i];
                     var mapFragment = new MapFragment(square.Position);
                     square.AddCollectable(mapFragment);
-                    destroyables.Remove(square);
+                    containers.Remove(square);
                 }
             }
 

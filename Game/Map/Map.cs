@@ -54,7 +54,7 @@ namespace Bomberman.Game.Map
                     freeSquares.Add(square);
                 }
             }
-            Utils.Shuffler.Shuffle(freeSquares);
+            
             return freeSquares;
         }
         public int DestroySquare(int x, int y)
@@ -68,7 +68,8 @@ namespace Bomberman.Game.Map
                 if (square.CanBeDestroyed)
                 {
                     this._mapElements[x, y] = new Ground(x, y);
-                    this._mapElements[x, y].AddCollectable(square.Collectable);
+                    if ( square.Collectable != null)
+                        this._mapElements[x, y].AddCollectable(square.Collectable);
                 }
             }
             return value;
@@ -77,10 +78,12 @@ namespace Bomberman.Game.Map
         {
             return DestroySquare(square.X, square.Y);
         }
-        public void OccupySquare(DestroyableElement element)
+        public MapElement OccupySquare(DestroyableElement element)
         {
             var square = GetSquare(element.X, element.Y);
             square.Occupy(element);
+
+            return square;
         }
         public void OccupySquare(int x, int y, DestroyableElement element)
         {
@@ -91,6 +94,18 @@ namespace Bomberman.Game.Map
         {
             var square = GetSquare(element.X, element.Y);
             square.Leave(element);
+        }
+
+        public static double GetSquaresDistance(MapElement square1, MapElement square2)
+        {
+            double distance = 0;
+            double xDistance, yDistance;
+
+            xDistance = Math.Abs(square1.X - square2.X);
+            yDistance = Math.Abs(square1.Y - square2.Y);
+            distance = Math.Max(xDistance, yDistance);
+
+            return distance;
         }
 
         private Map(MapElement[,] elements, int x, int y) { 

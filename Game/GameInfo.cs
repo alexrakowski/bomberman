@@ -72,6 +72,11 @@ namespace Bomberman.Game
             return Lifes < 1;
         }
 
+        public void AddLife()
+        {
+            this.Lifes++;
+        }
+
         public void AddPoints(int pointsToAdd)
         {
             this.Score += pointsToAdd;
