@@ -11,6 +11,8 @@ using Microsoft.Xna.Framework.Media;
 
 using Bomberman.Utils;
 using Bomberman.Game.Movable;
+using Bomberman.IO;
+using System.Runtime.Serialization;
 
 namespace Bomberman
 {
@@ -29,6 +31,9 @@ namespace Bomberman
         //Managers
         private UI.UIManager _UIManager;
         private Game.GameManager _GameManager;
+        
+        // Error Logger
+        ILoggable logger;
 
         public bool IsGameRunning { get; private set; }
         public string PlayerName { get; private set; }
@@ -41,6 +46,8 @@ namespace Bomberman
             graphics.PreferredBackBufferHeight = 600;
 
             Content.RootDirectory = "Content";
+
+            logger = new BoxLogger();
         }
 
         /// <summary>
@@ -107,7 +114,14 @@ namespace Bomberman
                 else
                 {
                     var elapsedTime = (int)gameTime.ElapsedGameTime.Milliseconds;
-                    _GameManager.Update(elapsedTime, move);
+                    try
+                    {
+                        _GameManager.Update(elapsedTime, move);
+                    }
+                    catch (BombermanException bombermanException)
+                    {
+                        logger.Log(bombermanException);
+                    }
                 }
             }
             else
@@ -197,7 +211,8 @@ namespace Bomberman
 
         public void SaveGame()
         {
-            throw new NotImplementedException();
+            ISerializable gameInfo = null;
+            FileManager.SaveGameFile(gameInfo, "Alek");
         }
 
         public void LoadGame()

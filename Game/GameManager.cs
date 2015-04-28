@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Bomberman.Game.Items;
 using Bomberman.Game.Map;
 using Bomberman.Game.Movable;
+using Bomberman.Game.Items.Modifiers;
 
 namespace Bomberman.Game
 {
@@ -29,14 +30,26 @@ namespace Bomberman.Game
         {
             //move movables
             _adventurer.Move(elapsedTime, move);
-            _adventurer.PickCollectable(this);
+            var collectable = _adventurer.PickCollectable();
+            if (collectable != null)
+            {
+                collectable.Collect(this);
+            }
 
             foreach (var enemy in _enemies)
                 enemy.Move(elapsedTime);
             //items
+            UpdateModifiers(elapsedTime);
             UpdateBombs(elapsedTime);
             //cleanup of destroyed or killed elements
             CleanupTheDead();
+        }
+        private void UpdateModifiers(int elapsedTime)
+        {
+            foreach (var modifier in _modifiers)
+            {
+                modifier.Update(elapsedTime, GameInfo, _enemies, _adventurer);
+            }
         }
         private void UpdateBombs(int elapsedTime)
         {
@@ -53,6 +66,7 @@ namespace Bomberman.Game
         }
         private void CleanupTheDead()
         {
+            _modifiers.RemoveAll(modifier => modifier.Time < 0);
             _bombs.RemoveAll(bomb => bomb.IsDead);
             _enemies.RemoveAll(enemy => enemy.IsDead);
             if (_adventurer.IsDead)
@@ -73,7 +87,9 @@ namespace Bomberman.Game
                 _adventurer.MakeAlive();
             }
         }
-
+    }
+    partial class GameManager : ICollector
+    {
         public void AddMapFragment()
         {
             if (GameInfo.AddMapFragment())
@@ -84,8 +100,11 @@ namespace Bomberman.Game
         }
         public void AddModifier(Modifier modifier)
         {
-            throw new NotImplementedException();
             modifier.Apply(GameInfo, _enemies, _adventurer);
+            if (_modifiers == null)
+            {
+                _modifiers = new List<Modifier>();
+            }
             _modifiers.Add(modifier);
         }
     }
@@ -119,6 +138,8 @@ namespace Bomberman.Game
 
             _enemies = new List<Movable.Enemy>();
             AddEnemies(level, _map);
+
+            _modifiers = new List<Modifier>();
         }
         private Map.Map LoadMap(GameLevels level)
         {
@@ -227,6 +248,7 @@ namespace Bomberman.Game
         {
             Bomb.LoadClassContent(content);
             MapFragment.LoadClassContent(content);
+            Modifier.LoadClassContent(content);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Bomberman.Game.Items
 {
     abstract class CollectableElement : GameElement, ICollectable
     {
-        public abstract void Collect(GameManager gameManager);
+        public abstract void Collect(ICollector collector);
 
         public CollectableElement(Vector2 position)
         {

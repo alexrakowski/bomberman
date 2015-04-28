@@ -33,9 +33,9 @@ namespace Bomberman.Game.Items
     partial class MapFragment
     {
 
-        public override void Collect(GameManager manager)
+        public override void Collect(ICollector collector)
         {
-            manager.AddMapFragment();
+            collector.AddMapFragment();
         }
     }
 }

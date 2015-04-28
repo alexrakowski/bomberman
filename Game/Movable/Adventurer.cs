@@ -44,18 +44,15 @@ namespace Bomberman.Game.Movable
             var square = _map.OccupySquare(bomb);
             bomb.Position = square.Position;
         }
-        public void PickCollectable(GameManager gameManager)
+        public ICollectable PickCollectable()
         {
+            ICollectable collectable = null;
             if (!this.IsMoving)
             {
                 var square = _map.GetSquare(X, Y);
-                var collectable = square.PickCollectable();
-
-                if (collectable != null)
-                {
-                    collectable.Collect(gameManager);
-                }
+                collectable = square.PickCollectable();
             }
+            return collectable;
         }
         public override void Move(int elapsedTime, Moves move)
         {

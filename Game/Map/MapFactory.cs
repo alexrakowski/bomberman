@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Bomberman.Game.Items;
+using Bomberman.Game.Items.Modifiers;
 
 namespace Bomberman.Game.Map
 {
@@ -88,22 +89,21 @@ namespace Bomberman.Game.Map
                     }
                 }
 
-                int mapFragmentsCount = 0;
-                switch (level)
-                {
-                    case GameLevels.First:
-                        mapFragmentsCount = 3;
-                        break;
-                    case GameLevels.Second:
-                        mapFragmentsCount = 4;
-                        break;
-                    case GameLevels.Third:
-                        mapFragmentsCount = 5;
-                        break;
-                }
+                int mapFragmentsCount = FragmentsPerLevel(level);
+                int modifiersCount = ModifiersPerLevel(level);
 
                 Utils.Shuffler.Shuffle(containers);
-                for (int i = 0; i < mapFragmentsCount; ++i)
+                AddMapFragments(containers, mapFragmentsCount);
+                AddModifiers(containers, modifiersCount);
+            }
+
+            private static void AddMapFragments(List<MapElement> containers, int mapCount)
+            {
+                if (containers.Count < mapCount)
+                {
+                    throw new BombermanException("Not enough space to hide all the Map Fragments.");
+                }
+                for (int i = 0; i < mapCount; ++i)
                 {
                     var square = containers[i];
                     var mapFragment = new MapFragment(square.Position);
@@ -111,7 +111,49 @@ namespace Bomberman.Game.Map
                     containers.Remove(square);
                 }
             }
-
+            private static void AddModifiers(List<MapElement> containers, int modifiersCount)
+            {
+                for (int i = 0; i < modifiersCount; ++i)
+                {
+                    if (containers.Count == 0)
+                    {
+                        break;
+                    }
+                    var square = containers[i];
+                    var pos = square.Position;
+                    var modifier = i % 2 == 0 ? ModifierFactory.GetRandomPositiveModifier(pos) : ModifierFactory.GetRandomNegativeModifier(pos);
+                    square.AddCollectable(modifier);
+                    containers.Remove(square);
+                }
+            }
+            private static int FragmentsPerLevel(GameLevels level)
+            {
+                switch (level)
+                {
+                    case GameLevels.First:
+                        return 3;
+                    case GameLevels.Second:
+                        return 4;
+                    case GameLevels.Third:
+                        return 5;
+                    default:
+                        return 3;
+                }
+            }
+            private static int ModifiersPerLevel(GameLevels level)
+            {
+                switch (level)
+                {
+                    case GameLevels.First:
+                        return 4;
+                    case GameLevels.Second:
+                        return 5;
+                    case GameLevels.Third:
+                        return 6;
+                    default:
+                        return 4;
+                }
+            }
 
             /// <summary>
             /// For testing etc.

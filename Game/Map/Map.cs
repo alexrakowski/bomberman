@@ -63,10 +63,13 @@ namespace Bomberman.Game.Map
             MapElement square = this.GetSquare(x, y);
             if (square != null)
             {
-                value = square.Destroy();
-
+                if (square.CanBeAffected)
+                {
+                    value += square.DestroyOccupiables();
+                }
                 if (square.CanBeDestroyed)
                 {
+                    value += square.Destroy();
                     this._mapElements[x, y] = new Ground(x, y);
                     if ( square.Collectable != null)
                         this._mapElements[x, y].AddCollectable(square.Collectable);

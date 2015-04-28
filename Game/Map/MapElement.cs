@@ -19,6 +19,7 @@ namespace Bomberman.Game.Map
         public abstract bool IsFlyingTerrain { get; }
         public abstract bool IsContainerTerrain { get; }
         public abstract bool CanBeDestroyed { get; }
+        public abstract bool CanBeAffected { get; }
 
         public bool IsOccupied { get { return OccupyingElements.Count > 0; } }
         public void Occupy(DestroyableElement element) { OccupyingElements.Add(element); }
@@ -50,8 +51,11 @@ namespace Bomberman.Game.Map
 
         public override int Destroy()
         {
-            int pointsScored = GetValue();
-
+            return GetValue();
+        }
+        public int DestroyOccupiables()
+        {
+            int pointsScored = 0;
             foreach (var destroyable in OccupyingElements)
             {
                 pointsScored += destroyable.Destroy();
@@ -94,6 +98,11 @@ namespace Bomberman.Game.Map
         {
             get { return false; }
         }
+
+        public override bool CanBeAffected
+        {
+            get { return true; }
+        }
     }
 
     class Woods : MapElement
@@ -127,6 +136,11 @@ namespace Bomberman.Game.Map
         {
             get { return true; }
         }
+
+        public override bool CanBeAffected
+        {
+            get { return true; }
+        }
     }
 
     class Rock : MapElement
@@ -156,6 +170,11 @@ namespace Bomberman.Game.Map
         }
 
         public override bool IsContainerTerrain
+        {
+            get { return false; }
+        }
+
+        public override bool CanBeAffected
         {
             get { return false; }
         }

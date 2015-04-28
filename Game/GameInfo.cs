@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
+using Bomberman.Game.Items.Modifiers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,7 +17,7 @@ namespace Bomberman.Game
         string PlayerName;
         public GameLevels Level;
 
-        Items.Modifier[] Modifiers;
+        Modifier[] Modifiers;
         Tuple<int, int> PlayerPosition;
         Movable.Enemy[] Enemies;
         Items.Bomb[] Bombs;

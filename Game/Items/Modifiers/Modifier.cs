@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 
-namespace Bomberman.Game.Items
+namespace Bomberman.Game.Items.Modifiers
 {
     abstract partial class Modifier : CollectableElement
     {
@@ -26,13 +26,14 @@ namespace Bomberman.Game.Items
                 OnTimeEnded(gameInfo, enemies, adventurer);
             }
         }
+
         protected abstract void OnApply(GameInfo gameInfo, List<Movable.Enemy> enemies, Movable.Adventurer adventurer);
         protected abstract void OnTimeEnded(GameInfo gameInfo, List<Enemy> enemies, Adventurer adventurer);
         protected abstract void SetTime();
 
-        public override void Collect(GameManager manager)
+        public override void Collect(ICollector collector)
         {
-            throw new NotImplementedException();
+            collector.AddModifier(this);
         }
 
         public Modifier(Vector2 position) : base(position) { }
@@ -44,11 +45,11 @@ namespace Bomberman.Game.Items
 
         public override void LoadContent(ContentManager content)
         {
-            TEXTURE = content.Load<Texture2D>(MapFragment.ASSET_NAME);
+            TEXTURE = content.Load<Texture2D>(Modifier.ASSET_NAME);
         }
         public static void LoadClassContent(ContentManager content)
         {
-            TEXTURE = content.Load<Texture2D>(MapFragment.ASSET_NAME);
+            TEXTURE = content.Load<Texture2D>(Modifier.ASSET_NAME);
         }
         public override Texture2D GetTexture()
         {

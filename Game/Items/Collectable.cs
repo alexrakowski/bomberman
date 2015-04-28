@@ -8,14 +8,6 @@ namespace Bomberman.Game.Items
 {
     interface ICollectable
     {
-        void Collect(GameManager manager);
-    }
-    abstract class CollectableItem : GameElement, ICollectable
-    {
-        public void Collect(GameManager manager)
-        {
-            throw new NotImplementedException();
-        }
-    }
-    
+        void Collect(ICollector collector);
+    }   
 }

@@ -138,6 +138,14 @@ namespace Bomberman.Game.Movable
         [System.ComponentModel.DefaultValue(false)]
         public bool IsMoving { get; protected set; }
         public Moves Direction { get; protected set; }
+        private void StopMove()
+        {
+            if (this.IsMoving)
+            {
+                this.IsMoving = false;
+                this.Direction = Moves.None;
+            }
+        }
 
         public void PutOnAnotherSquare(Map.MapElement square)
         {
@@ -145,6 +153,7 @@ namespace Bomberman.Game.Movable
             prevSquare.Leave(this);
             PutOnSquare(square);
             square.Occupy(this);
+            this.StopMove();
         }
 
         public MovableElement(Map.Map map) { _map = map; SpeedModifier = 1; }

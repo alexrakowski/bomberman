@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace Bomberman.Game.Items.PositiveModifiers
+namespace Bomberman.Game.Items.Modifiers.PositiveModifiers
 {
     class NewLife : Modifier
     {
         protected override void OnApply(GameInfo gameInfo, List<Movable.Enemy> enemies, Movable.Adventurer adventurer)
         {
             gameInfo.AddLife();
-            throw new NotImplementedException();
         }
 
         protected override void OnTimeEnded(GameInfo gameInfo, List<Movable.Enemy> enemies, Movable.Adventurer adventurer)

@@ -96,7 +96,7 @@ namespace Bomberman.Game.Items
                 if (square != null)
                 {
                     pointsScored += map.DestroySquare(square);
-                    if (square.CanBeDestroyed)
+                    if (square.CanBeAffected)
                     {
                         AffectedPositions.Add(square.Position);
                     }
