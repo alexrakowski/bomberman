@@ -17,7 +17,7 @@ namespace Bomberman.Game.Movable
 
     abstract partial class MovableElement : DestroyableElement, IMovable
     {
-        public float InitialSpeed = 1;
+        public float InitialSpeed { get; set; }
         public float Speed { get { return (float)(InitialSpeed * SpeedModifier); } }
         [System.ComponentModel.DefaultValue(1.0f)]
         public float SpeedModifier { get; set; }

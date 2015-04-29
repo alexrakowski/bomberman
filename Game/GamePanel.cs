@@ -40,10 +40,10 @@ namespace Bomberman.Game
         {
             GamePanel.Textures = new Dictionary<InfoTypes, Texture2D>();
             GamePanel.BackgroundTexture = content.Load<Texture2D>("textures/ui/game_panel");
-            GamePanel.Textures[InfoTypes.Score] = content.Load<Texture2D>("textures/items/map_fragment");
+            GamePanel.Textures[InfoTypes.Score] = content.Load<Texture2D>("textures/ui/gold_pile");
             GamePanel.Textures[InfoTypes.Maps] = content.Load<Texture2D>("textures/items/map_fragment");
-            GamePanel.Textures[InfoTypes.Lifes] = content.Load<Texture2D>("textures/items/map_fragment");
-            GamePanel.Textures[InfoTypes.Time] = content.Load<Texture2D>("textures/items/map_fragment");
+            GamePanel.Textures[InfoTypes.Lifes] = content.Load<Texture2D>("textures/ui/heart");
+            GamePanel.Textures[InfoTypes.Time] = content.Load<Texture2D>("textures/ui/hourglass");
 
             GamePanel.Font = content.Load<SpriteFont>("fonts/TestFont");
         }
@@ -61,7 +61,8 @@ namespace Bomberman.Game
             if (Positions.TryGetValue(infoType, out imagePos))
             {
                 var texture = GamePanel.Textures[infoType];
-                spriteBatch.Draw(texture, imagePos, Color.White);
+                var rectangle = new Rectangle((int)imagePos.X, (int)imagePos.Y, GameConstants.SQUARE_WIDTH, GameConstants.SQUARE_HEIGTH);
+                spriteBatch.Draw(texture, rectangle, Color.White);
             }
 
             if (FontPositions.TryGetValue(infoType, out fontPos))
@@ -82,7 +83,6 @@ namespace Bomberman.Game
                 case InfoTypes.Lifes:
                     return gameInfo.Lifes.ToString();
                 case InfoTypes.Time:
-                    string formattedTime = "";
                     int time = (int)gameInfo.Time;
                     return string.Format("{0}:{1:00}", time / 60, time % 60);
                 case InfoTypes.Level:

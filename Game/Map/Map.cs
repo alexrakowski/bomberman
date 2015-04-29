@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
+using Bomberman.Game.Algorithms;
+using Bomberman.Game.Movable;
 using Bomberman.Game.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -111,6 +113,94 @@ namespace Bomberman.Game.Map
             distance = Math.Max(xDistance, yDistance);
 
             return distance;
+        }
+        public List<int>[] ToGraph(MovableElement movable)
+        {
+            int width = MAP_WIDTH;
+            int height = MAP_HEIGHT;
+            int totalVertices = width * height;
+
+            List<int>[] vertices = new List<int>[totalVertices];
+            for (int x = 0; x < width; ++x)
+            {
+                int rowIndex = x * height;
+                for (int y = 0; y < height; ++y)
+                {
+                    List<int> adjacentVertices = new List<int>();
+                    if (IsMoveLegal(movable, x + 1, y))
+                    {
+                        int verticeIndex = (x + 1) * height + y;
+                        adjacentVertices.Add(verticeIndex);
+                    }
+                    if (IsMoveLegal(movable, x - 1, y))
+                    {
+                        int verticeIndex = (x - 1) * height + y;
+                        adjacentVertices.Add(verticeIndex);
+                    }
+                    if (IsMoveLegal(movable, x, y + 1))
+                    {
+                        int verticeIndex = x * height + y + 1;
+                        adjacentVertices.Add(verticeIndex);
+                    }
+                    if (IsMoveLegal(movable, x, y - 1))
+                    {
+                        int verticeIndex = x * height + y - 1;
+                        adjacentVertices.Add(verticeIndex);
+                    }
+
+                    vertices[y + rowIndex] = adjacentVertices;
+                }
+            }
+            return vertices;
+        }
+        private bool IsMoveLegal(MovableElement movable, int x, int y)
+        {
+            MapElement square = GetSquare(x, y);
+            if (square == null)
+                return false;
+            if (square == Adventurer.GetOccupiedSquare())
+                return true;
+
+            if (square.IsOccupied)
+                return false;
+            if (!square.IsFlyingTerrain)
+                return false;
+            if (!square.IsWalkingTerrain)
+                return movable.CanFly;
+            else
+                return true;
+        }
+        public int GetSquareIndex(MapElement square)
+        {
+            return GetSquareIndex(square.X, square.Y);
+        }
+        public int GetSquareIndex(int x, int y)
+        {
+            int index = x * MAP_HEIGHT + y;
+            return index;
+        }
+        public Moves IndexToMove(int index, int x, int y)
+        {
+            int toX = index / MAP_HEIGHT;
+            int toY = index % MAP_HEIGHT;
+
+            if (toX == x + 1)
+            {
+                return Moves.Right;
+            }
+            if (toX == x - 1)
+            {
+                return Moves.Left;
+            }
+            if (toY == y + 1)
+            {
+                return Moves.Down;
+            }
+            if (toY == y - 1)
+            {
+                return Moves.Up;
+            }
+            return Moves.None;
         }
 
         private Map(MapElement[,] elements, int x, int y)

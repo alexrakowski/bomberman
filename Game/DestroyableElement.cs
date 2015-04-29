@@ -12,5 +12,6 @@ namespace Bomberman.Game
         public abstract int GetValue();
 
         public bool IsDead { get; protected set; }
+        public bool IsIndestructible { get; set; }
     }
 }

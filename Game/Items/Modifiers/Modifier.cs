@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Bomberman.Game.Serialization;
+using Bomberman.Game.Movable.Enemies;
 
 namespace Bomberman.Game.Items.Modifiers
 {
@@ -28,7 +29,7 @@ namespace Bomberman.Game.Items.Modifiers
             }
         }
 
-        protected abstract void OnApply(GameInfo gameInfo, List<Movable.Enemy> enemies, Movable.Adventurer adventurer);
+        protected abstract void OnApply(GameInfo gameInfo, List<Enemy> enemies, Movable.Adventurer adventurer);
         protected abstract void OnTimeEnded(GameInfo gameInfo, List<Enemy> enemies, Adventurer adventurer);
         protected abstract void SetTime();       
     }

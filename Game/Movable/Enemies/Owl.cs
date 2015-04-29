@@ -5,52 +5,50 @@ using System.Linq;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Bomberman.Game.Map;
+using Bomberman.Game.Algorithms;
 
-namespace Bomberman.Game.Movable
+namespace Bomberman.Game.Movable.Enemies
 {
-    partial class Wolf : Enemy
+    partial class Owl : Enemy
     {
         public override bool CanFly
         {
             get
             {
-                return false;
+                return true;
             }
-            protected set {}
+            protected set { }
         }
-        private static int POINTS_VALUE;
+        private static int POINTS_VALUE = 400;
 
         public override Moves GetNextStep()
         {
-            var legalMoves = GetLegalMoves();
-            if (legalMoves.Count < 1) return Moves.None;
-            Utils.Shuffler.Shuffle(legalMoves);
-            return legalMoves.First();
+            return GetRandomMove();
         }
-        public Wolf(Map.Map map, MapElement startSquare)
+        public Owl(Map.Map map, MapElement startSquare)
             : base(map, startSquare)
         {
-            this.InitialSpeed = 0.1f;
+            InitialSpeed = Adventurer.INITIAL_SPEED;
         }
 
         public override int GetValue()
         {
-            return Wolf.POINTS_VALUE;
+            return Owl.POINTS_VALUE;
         }
     }
-    partial class Wolf
+    partial class Owl
     {
-        public const string ASSET_NAME = "textures/movable_objects/wolf";
+        public const string ASSET_NAME = "textures/movable_objects/owl";
         private static Texture2D TEXTURE;
 
         public override Texture2D GetTexture()
         {
-            return Wolf.TEXTURE;
+            return Owl.TEXTURE;
         }
 
         public override void LoadContent(ContentManager content)
         {
-            Wolf.TEXTURE = content.Load<Texture2D>(Wolf.ASSET_NAME);
+            Owl.TEXTURE = content.Load<Texture2D>(Owl.ASSET_NAME);
         }
     }
 }

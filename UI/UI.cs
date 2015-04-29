@@ -26,7 +26,11 @@ namespace Bomberman.UI
             _currentMenu = new MainMenu(this._iGame);
         }
         public void ShowOptionsMenu() { throw new NotImplementedException(); }
-        public void ShowLoginMenu() { throw new NotImplementedException(); }
+        public void ShowLoginMenu()
+        {
+            if (_currentMenu != null) return;
+            _currentMenu = new LoginMenu(this._iGame);
+        }
         public void ShowPauseMenu()
         {
             _currentMenu = new PauseMenu(this._iGame);

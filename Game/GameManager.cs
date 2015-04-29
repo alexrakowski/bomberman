@@ -11,13 +11,16 @@ using Bomberman.Game.Map;
 using Bomberman.Game.Movable;
 using Bomberman.Game.Items.Modifiers;
 using Bomberman.Game.Serialization;
+using Bomberman.Game.Movable.Enemies;
 
 namespace Bomberman.Game
 {
     partial class GameManager : IDrawable
     {
+        public const int RESPAWN_SHIELD_TIME = 4;
+
         private Map.Map _map;
-        private List<Movable.Enemy> _enemies;
+        private List<Enemy> _enemies;
         private Movable.Adventurer _adventurer;
         private List<Items.Bomb> _bombs;
         private List<Modifier> _modifiers;
@@ -90,7 +93,14 @@ namespace Bomberman.Game
                 var square = _map.GetStartSquare();
                 _adventurer.PutOnAnotherSquare(square);
                 _adventurer.MakeAlive();
+                AddRespawnShield();
             }
+        }
+        private void AddRespawnShield()
+        {
+            var indestructibleModifier = new Indestructible(RESPAWN_SHIELD_TIME);
+            _modifiers.Add(indestructibleModifier);
+            indestructibleModifier.Apply(_gameInfo, _enemies, _adventurer);
         }
     }
     partial class GameManager : ICollector

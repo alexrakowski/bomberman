@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using Bomberman.Game.Map;
 using System.Text;
+using System.Linq;
 using Bomberman.Game.Serialization;
 
-namespace Bomberman.Game.Movable
+namespace Bomberman.Game.Movable.Enemies
 {
     abstract class Enemy : MovableElement
     {
@@ -49,6 +50,14 @@ namespace Bomberman.Game.Movable
 
             return legalMoves;
         }
+        protected Moves GetRandomMove()
+        {
+            var legalMoves = GetLegalMoves();
+            if (legalMoves.Count < 1) return Moves.None;
+            Utils.Shuffler.Shuffle(legalMoves);
+            return legalMoves.First();
+        }
+
         public override void Move(int elapsedTime, Moves move = Moves.None)
         {
             if (!this.IsMoving)

@@ -36,6 +36,7 @@ namespace Bomberman.Game.Movable
                 throw new NotImplementedException();
             }
         }
+        public const float INITIAL_SPEED = 0.1f;
 
         private List<Bomb> _bombs;
         public int BombsLimit { get; set; }
@@ -88,8 +89,12 @@ namespace Bomberman.Game.Movable
         }
         public override int Destroy()
         {
-            this.IsDead = true;
-            return GetValue();
+            if (!IsIndestructible)
+            {
+                this.IsDead = true;
+                return GetValue();
+            }
+            else return 0;
         }
         public override int GetValue()
         {
@@ -142,8 +147,7 @@ namespace Bomberman.Game.Movable
         {
             this._bombs = bombs;
             this.BombsLimit = 2;
-
-            this.InitialSpeed = 0.2f;
+            this.InitialSpeed = INITIAL_SPEED * 2;
             this.IsMoving = false;
         }
     }

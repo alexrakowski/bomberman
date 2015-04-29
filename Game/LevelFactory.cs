@@ -6,6 +6,7 @@ using Bomberman.Game.Items;
 using Bomberman.Game.Items.Modifiers;
 using Bomberman.Game.Map;
 using Bomberman.Game.Movable;
+using Bomberman.Game.Movable.Enemies;
 using Bomberman.Game.Serialization;
 
 namespace Bomberman.Game
@@ -71,29 +72,35 @@ namespace Bomberman.Game
                     owlsCount = 2;
                     break;
             }
+            int totalCount = wolvesCount + owlsCount;
 
-            var freeSquares = map.GetUnoccupiedSquares();
             var adventurerSquare = map.GetStartSquare();
+            var freeSquares = map.GetUnoccupiedSquares();
+            // put enemies in a distance from adventurer's starting point
+            freeSquares.RemoveAll(s => (Map.Map.GetSquaresDistance(s, adventurerSquare) < 5));
+            if (freeSquares.Count < totalCount)
+            {
+                throw new BombermanException("Not enough space for the enemies");
+            }
 
             Utils.Shuffler.Shuffle(freeSquares);
 
             MapElement square;
             for (int i = 0; i < wolvesCount; ++i)
             {
-                // put enemies in a distance from adventurer's starting point
-                do
-                {
-                    if (freeSquares.Count < 1)
-                    {
-                        throw new BombermanException("Not enough space for the enemies");
-                    }
-                    square = freeSquares.First();
-                    freeSquares.Remove(square);
-                } while (Map.Map.GetSquaresDistance(square, adventurerSquare) < 5);
-
+                square = freeSquares.First();
                 var wolf = new Wolf(map, square);
                 enemies.Add(wolf);
+                freeSquares.Remove(square);
             }
+            for (int i = 0; i < owlsCount; ++i)
+            {
+                square = freeSquares.First();
+                var owl = new Owl(map, square);
+                enemies.Add(owl);
+                freeSquares.Remove(square);
+            }
+
             return enemies;
         }
 
@@ -108,8 +115,8 @@ namespace Bomberman.Game
             {
                 foreach (var info in gameState.Enemies)
                 {
-                    //var enemy = null;
-                    //enemies.Add(enemy);
+                    var enemy = EnemyFactory.Construct(info, map);
+                    enemies.Add(enemy);
                 }
             }
 
@@ -134,6 +141,7 @@ namespace Bomberman.Game
                 {
                     var modifier = ModifierFactory.Construct(info);
                     modifiers.Add(modifier);
+                    modifier.Apply(gameInfo, enemies, adventurer);
                 }
             }
         }

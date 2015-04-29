@@ -10,5 +10,6 @@ namespace Bomberman.Game
         int Destroy();
         int GetValue();
         bool IsDead { get; }
+        bool IsIndestructible { get; set; }
     }
 }
