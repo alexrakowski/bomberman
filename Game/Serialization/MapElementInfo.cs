@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 
@@ -11,23 +12,38 @@ namespace Bomberman.Game.Serialization
     {
         public CollectableInfo Collectable;
 
-        public override void ReadXml(System.Xml.XmlReader reader)
+        public void ReadXml(System.Xml.XmlReader reader)
         {
-            throw new NotImplementedException();
+            if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Collectable")
+            {
+                if (!reader.IsEmptyElement)
+                {
+                    this.Collectable = new CollectableInfo(reader);
+                }
+                else
+                {
+                    reader.Read();
+                }
+            }
+            base.ReadXml(reader);
         }
 
         public void WriteXml(System.Xml.XmlWriter writer)
         {
-            base.WriteXml(writer);
-
+            writer.WriteStartElement("Collectable");
             if (Collectable != null)
             {
-                writer.WriteStartElement("Collectable");
                 Collectable.WriteXml(writer);
-                writer.WriteEndElement();
             }
+            writer.WriteEndElement();
+            base.WriteXml(writer);
         }
 
-        public MapElementInfo(int X, int Y, Vector2 Position, string Type) : base(X,Y, Position, Type) {}
+        public MapElementInfo(XmlReader reader)
+        {
+            this.ReadXml(reader);
+        }
+        public MapElementInfo() { }
+        public MapElementInfo(int X, int Y, Vector2 Position, string Type) : base(X, Y, Position, Type) { }
     }
 }

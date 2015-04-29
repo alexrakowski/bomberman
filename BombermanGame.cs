@@ -216,7 +216,7 @@ namespace Bomberman
 
         public void LoadGame()
         {
-            throw new NotImplementedException();
+            FileManager.LoadGameFile("Alek");
         }
 
         public void ResumeGame()

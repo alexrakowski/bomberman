@@ -35,6 +35,7 @@ namespace Bomberman.IO
         }
 
         const string SAVES_PATH = FILES_PREF + "/Saves/";
+        const string SAVED_GAMES_EXT = ".sav";
         public static void SaveGameFile(IXmlSerializable gameInfo, string playerName)
         {
             string dirPath = SAVES_PATH + playerName;
@@ -44,29 +45,33 @@ namespace Bomberman.IO
             int saveIndex = 1;
             do
             {
-                savePath = dirPath + "/" + saveIndex.ToString() + ".sav";
+                // find first unused index for file name
+                savePath = dirPath + "/" + saveIndex.ToString() + SAVED_GAMES_EXT;
                 saveIndex++;
             } while (File.Exists(savePath));
 
             WriteXmlSerializable(gameInfo, savePath);
         }
-        private static void WriteSerializable(ISerializable serializable, string filePath)
+        public static Object LoadGameFile(string playerName)
         {
-            FileStream stream = null;
-            try
+            string dirPath = SAVES_PATH + playerName;
+            string loadPath;
+            
+            int saveIndex = 0;
+            do
             {
-                stream = new FileStream(filePath, FileMode.Create);
-                IFormatter formatter = new SoapFormatter();
-                formatter.Serialize(stream, serializable);
-            }
-            finally
-            {
-                if (stream != null)
-                    stream.Close();
-            }
+                // find last used index of file name
+                saveIndex++;
+                loadPath = dirPath + "/" + saveIndex.ToString() + SAVED_GAMES_EXT;
+            } while (File.Exists(loadPath));
 
-            //TODO: remove file if error
+            loadPath = dirPath + "/" + (saveIndex - 1).ToString() + SAVED_GAMES_EXT;
+
+            var result = ReadXmlSerializable(loadPath);
+
+            return result;
         }
+
         private static void WriteXmlSerializable(IXmlSerializable xmlSerializable, string filePath)
         {
             FileStream stream = null;
@@ -83,6 +88,18 @@ namespace Bomberman.IO
             }
 
             //TODO: remove file if error
+        }
+        private static Object ReadXmlSerializable(string filePath)
+        {
+            Object obj;
+            XmlSerializer serializer = new XmlSerializer(typeof(Bomberman.Game.Serialization.GameState));
+
+            using (Stream reader = new FileStream(filePath, FileMode.Open))
+            {
+                obj = (Bomberman.Game.Serialization.GameState)serializer.Deserialize(reader);
+            }
+
+            return null;
         }
     }
 }

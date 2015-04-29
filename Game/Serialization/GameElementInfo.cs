@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 
@@ -19,7 +20,16 @@ namespace Bomberman.Game.Serialization
             return null;
         }
 
-        public abstract void ReadXml(System.Xml.XmlReader reader);
+        public void ReadXml(System.Xml.XmlReader reader)
+        {
+            this.Type = reader.ReadElementString();
+            this.X = Int32.Parse(reader.ReadElementString());
+            this.Y = Int32.Parse(reader.ReadElementString());
+            
+            //TODO: parse position
+            reader.ReadElementString();
+            reader.ReadEndElement();
+        }
 
         public void WriteXml(System.Xml.XmlWriter writer)
         {
@@ -29,6 +39,11 @@ namespace Bomberman.Game.Serialization
             writer.WriteElementString("Position", Position.ToString());
         }
 
+        public GameElementInfo(XmlReader reader)
+        {
+
+        }
+        public GameElementInfo() { }
         public GameElementInfo(int X, int Y, Vector2 Position, string Type)
         {
             this.X = X;

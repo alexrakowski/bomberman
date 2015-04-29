@@ -174,7 +174,7 @@ namespace Bomberman.Game
             gameState.Enemies = _enemies.Select(enemy => enemy.GetInfo()).ToList();
             gameState.Map = _map.GetInfo();
             gameState.Modifiers = _modifiers.Select(modifier => modifier.GetInfo()).ToList();
-            gameState.Bombs = _bombs.Select(bomb => bomb.GetInfo()).ToList();
+            gameState.Bombs = _bombs.Select(bomb => (BombInfo)bomb.GetInfo()).ToList();
 
             return gameState;
         }

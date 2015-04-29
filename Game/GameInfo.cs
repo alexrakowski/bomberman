@@ -42,6 +42,8 @@ namespace Bomberman.Game
             mapFragmentsFound = new int[2] { 0, fragmentsToFind };
         }
 
+        public GameInfo() { }
+
         public System.Xml.Schema.XmlSchema GetSchema()
         {
             return null;
@@ -49,7 +51,14 @@ namespace Bomberman.Game
 
         public void ReadXml(System.Xml.XmlReader reader)
         {
-            throw new NotImplementedException();
+            this.Score = Int32.Parse(reader.ReadElementString());
+            this.Time = Double.Parse(reader.ReadElementString());
+            this.Lifes = Int32.Parse(reader.ReadElementString());
+            this.Level = (GameLevels)Enum.Parse(typeof(GameLevels), reader.ReadElementString());
+            this.mapFragmentsFound = new int[2];
+            this.mapFragmentsFound[0] = Int32.Parse(reader.ReadElementString());
+            this.mapFragmentsFound[1] = Int32.Parse(reader.ReadElementString());
+            reader.ReadEndElement();
         }
 
         public void WriteXml(System.Xml.XmlWriter writer)
@@ -57,7 +66,7 @@ namespace Bomberman.Game
             writer.WriteElementString("Score", Score.ToString());
             writer.WriteElementString("Time", Time.ToString());
             writer.WriteElementString("Lifes", Lifes.ToString());
-            writer.WriteElementString("Level", ((int)Level).ToString());
+            writer.WriteElementString("Level", Level.ToString());
             writer.WriteElementString("MapFragmentsFound", mapFragmentsFound[0].ToString());
             writer.WriteElementString("MapFragmentsToFind", mapFragmentsFound[1].ToString());
         }

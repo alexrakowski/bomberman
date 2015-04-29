@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Xml;
 using System.Xml.Serialization;
 using Bomberman.Game.Items;
 using Bomberman.Game.Items.Modifiers;
@@ -16,9 +17,9 @@ namespace Bomberman.Game.Serialization
         public IXmlSerializable GameInfo;
         public AdventurerInfo Player;
         public List<IXmlSerializable> Enemies;
-        public IXmlSerializable Map;
+        public List<BombInfo> Bombs;
         public List<IXmlSerializable> Modifiers;
-        public List<IXmlSerializable> Bombs;
+        public IXmlSerializable Map;
 
         public GameState(GameInfo gameInfo)
         {
@@ -33,7 +34,85 @@ namespace Bomberman.Game.Serialization
 
         public void ReadXml(System.Xml.XmlReader reader)
         {
-            throw new NotImplementedException();
+            reader.MoveToContent();
+            reader.Read(); // Skip ahead to next node
+
+            //GameInfo
+            if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "GameInfo")
+            {
+                this.GameInfo = new GameInfo();
+                this.GameInfo.ReadXml(reader);
+            }
+            //Adventurer
+            if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Adventurer")
+            {
+                this.Player = new AdventurerInfo(reader);
+            }
+            //Enemies
+            if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Enemies")
+            {
+                if (!reader.IsEmptyElement)
+                {
+                    reader.Read();
+                    this.Enemies = new List<IXmlSerializable>();
+
+                    while (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Enemy")
+                    {
+                        var enemy = new EnemyInfo(reader);
+                        this.Enemies.Add(enemy);
+                    }
+                    reader.ReadEndElement();
+                }
+                else
+                {
+                    reader.Read();
+                }
+            }
+            //Bombs
+            if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Bombs")
+            {
+                if (!reader.IsEmptyElement)
+                {
+                    reader.Read();
+                    this.Bombs = new List<BombInfo>();
+
+                    while (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Bomb")
+                    {
+                        var bomb = new BombInfo(reader);
+                        this.Bombs.Add(bomb);
+                    }
+                    reader.ReadEndElement();
+                }
+                else
+                {
+                    reader.Read();
+                }
+            }
+            //Modifiers
+            if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Modifiers")
+            {
+                if (!reader.IsEmptyElement)
+                {
+                    reader.Read();
+                    this.Modifiers = new List<IXmlSerializable>();
+
+                    while (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Modifier")
+                    {
+                        var modifier = new ModifierInfo(reader);
+                        this.Modifiers.Add(modifier);
+                    }
+                    reader.ReadEndElement();
+                }
+                else
+                {
+                    reader.Read();
+                }                
+            }
+            //Map
+            if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Map")
+            {
+                this.Map = new MapInfo(reader);
+            }
         }
 
         public void WriteXml(System.Xml.XmlWriter writer)

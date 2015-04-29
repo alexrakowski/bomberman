@@ -133,6 +133,8 @@ namespace Bomberman.Game.Map
 
             var info = new MapInfo(squareInfos);
             info.StartPosition = this.startPosition;
+            info.Width = width;
+            info.Height = height;
 
             return info;
         }

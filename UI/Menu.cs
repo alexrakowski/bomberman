@@ -85,7 +85,7 @@ namespace Bomberman.UI.Menus
                     break;
                 // Load Game
                 case 1:
-                    throw new NotImplementedException();
+                    _iGame.LoadGame();
                     break;
                 //High Scores
                 case 2:

@@ -150,7 +150,7 @@ namespace Bomberman.Game.Movable
     {
         public override System.Xml.Serialization.IXmlSerializable GetInfo()
         {
-            var info = new AdventurerInfo(X, Y, Position, GetType().Name);
+            var info = new AdventurerInfo(X, Y, Position, GetType().Name, BombsLimit);
             return info;
         }
     }

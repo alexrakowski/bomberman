@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace Bomberman.Game.Serialization
@@ -28,5 +29,11 @@ namespace Bomberman.Game.Serialization
             writer.WriteElementString("Time", Time.ToString());
             writer.WriteElementString("Type", Type);
         }
+
+        public ModifierInfo(XmlReader reader)
+        {
+            this.ReadXml(reader);
+        }
+        public ModifierInfo() { }
     }
 }
