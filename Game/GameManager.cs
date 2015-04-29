@@ -28,7 +28,7 @@ namespace Bomberman.Game
         public GameInfo _gameInfo;
         private GamePanel _gamePanel;
 
-        public bool HasPlayerLost() { throw new NotImplementedException(); }
+        public bool HasPlayerLost { get; set; }
 
         public void Update(int elapsedTime, Moves move)
         {
@@ -86,7 +86,7 @@ namespace Bomberman.Game
         {
             if (_gameInfo.LoseLife())
             {
-                throw new NotImplementedException();
+                this.HasPlayerLost = true;
             }
             else
             {
@@ -237,6 +237,7 @@ namespace Bomberman.Game
 
             foreach (var enemy in _enemies)
                 enemy.LoadContent(content);
+            Fox.LoadClassContent(content);
             LoadItemsContent(content);
         }
         private void LoadItemsContent(ContentManager content)

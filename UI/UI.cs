@@ -35,6 +35,10 @@ namespace Bomberman.UI
         {
             _currentMenu = new PauseMenu(this._iGame);
         }
+        public void ShowGameOverMenu()
+        {
+            _currentMenu = new GameOverMenu(this._iGame);
+        }
 
         public void Update(Moves move)
         {

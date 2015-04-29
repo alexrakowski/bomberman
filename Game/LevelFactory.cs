@@ -72,7 +72,7 @@ namespace Bomberman.Game
                     owlsCount = 2;
                     break;
             }
-            int totalCount = wolvesCount + owlsCount;
+            int totalCount = wolvesCount + owlsCount + foxesCount;
 
             var adventurerSquare = map.GetStartSquare();
             var freeSquares = map.GetUnoccupiedSquares();
@@ -98,6 +98,13 @@ namespace Bomberman.Game
                 square = freeSquares.First();
                 var owl = new Owl(map, square);
                 enemies.Add(owl);
+                freeSquares.Remove(square);
+            }
+            for (int i = 0; i < foxesCount; ++i)
+            {
+                square = freeSquares.First();
+                var fox = new Fox(map, square);
+                enemies.Add(fox);
                 freeSquares.Remove(square);
             }
 

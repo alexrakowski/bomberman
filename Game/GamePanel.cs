@@ -22,6 +22,10 @@ namespace Bomberman.Game
         private static SpriteFont Font;
         private static Color fontColor = Color.Black;
 
+        public void Draw(SpriteBatch spriteBatch, GameInfo gameInfo, string information)
+        {
+            this.Draw(spriteBatch, gameInfo);
+        }
         public void Draw(SpriteBatch spriteBatch, GameInfo gameInfo)
         {
             DrawBackground(spriteBatch);

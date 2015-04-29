@@ -36,7 +36,7 @@ namespace Bomberman
 
         public bool IsGameRunning { get; private set; }
         public string PlayerName { get; private set; }
-        bool IsPlayerLoggedIn = false;
+        bool IsPlayerLoggedIn = true;
 
         public BombermanGame()
         {
@@ -121,6 +121,12 @@ namespace Bomberman
                     catch (BombermanException bombermanException)
                     {
                         logger.Log(bombermanException);
+                    }
+                    if (_GameManager.HasPlayerLost)
+                    {
+                        _GameManager.HasPlayerLost = false;
+                        IsGameRunning = false;
+                        _UIManager.ShowGameOverMenu();
                     }
                 }
             }

@@ -78,18 +78,18 @@ namespace Bomberman.Game.Map
                         break;
                     case "Woods":
                         element = new Woods(x, y);
-                        if (squareInfo.Collectable != null)
-                        {
-                            var collectableInfo = (CollectableInfo)squareInfo.Collectable;
-                            var collectable = CollectableFactory.Construct(collectableInfo);
-                            element.AddCollectable(collectable);
-                        }
                         break;
                     case "Rock":
                         element = new Rock(x, y);
                         break;
                     default:
                         throw new BombermanException("Could not construct square.");
+                }
+                if (squareInfo.Collectable != null)
+                {
+                    var collectableInfo = (CollectableInfo)squareInfo.Collectable;
+                    var collectable = CollectableFactory.Construct(collectableInfo);
+                    element.AddCollectable(collectable);
                 }
                 return element;
             }

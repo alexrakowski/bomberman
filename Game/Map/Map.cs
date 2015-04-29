@@ -103,16 +103,20 @@ namespace Bomberman.Game.Map
             square.Leave(element);
         }
 
-        public static double GetSquaresDistance(MapElement square1, MapElement square2)
+        public static double GetSquaresDistance(int x1, int y1, int x2, int y2)
         {
             double distance = 0;
             double xDistance, yDistance;
 
-            xDistance = Math.Abs(square1.X - square2.X);
-            yDistance = Math.Abs(square1.Y - square2.Y);
+            xDistance = Math.Abs(x1 - x2);
+            yDistance = Math.Abs(y1 - y2);
             distance = Math.Max(xDistance, yDistance);
 
             return distance;
+        }
+        public static double GetSquaresDistance(MapElement square1, MapElement square2)
+        {
+            return GetSquaresDistance(square1.X, square1.Y, square2.X, square2.Y);
         }
         public List<int>[] ToGraph(MovableElement movable)
         {
@@ -181,6 +185,10 @@ namespace Bomberman.Game.Map
         }
         public Moves IndexToMove(int index, int x, int y)
         {
+            if (index == -1)
+            {
+                return Moves.None;
+            }
             int toX = index / MAP_HEIGHT;
             int toY = index % MAP_HEIGHT;
 

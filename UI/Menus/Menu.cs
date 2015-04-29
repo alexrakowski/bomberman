@@ -20,7 +20,7 @@ namespace Bomberman.UI.Menus
         {
             //Draw the title
             Color fontColor = Color.Black;
-            Vector2 fontPos = new Vector2(200, 100);
+            Vector2 fontPos = new Vector2(100, 100);
             Vector2 FontOrigin = spriteFont.MeasureString(this.Title) / 2;
 
             spriteBatch.DrawString(spriteFont, this.Title, fontPos, fontColor,
