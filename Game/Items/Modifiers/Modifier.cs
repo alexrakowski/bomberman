@@ -35,12 +35,16 @@ namespace Bomberman.Game.Items.Modifiers
 
     abstract partial class Modifier : IToInfo
     {
-
-        public System.Xml.Serialization.IXmlSerializable GetInfo()
+        public System.Xml.Serialization.IXmlSerializable ToInfo()
         {
             var info = new ModifierInfo(Time, GetType().Name);
 
             return info;
+        }
+
+        public void Construct(System.Xml.Serialization.IXmlSerializable info)
+        {
+            throw new NotImplementedException();
         }
     }
 }

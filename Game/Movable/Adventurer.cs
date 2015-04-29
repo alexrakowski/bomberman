@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Bomberman.Game.Items;
 using Bomberman.Game.Serialization;
+using System.Xml.Serialization;
 
 namespace Bomberman.Game.Movable
 {
@@ -106,7 +107,14 @@ namespace Bomberman.Game.Movable
         /// <returns></returns>
         public static Adventurer GetNewInstance(Map.Map map, List<Items.Bomb> bombs)
         {
-            return instance = new Adventurer(map, bombs);
+            instance = new Adventurer(map, bombs);
+            var startSquare = map.GetStartSquare();
+            instance.X = startSquare.X;
+            instance.Y = startSquare.Y;
+            instance.Position = startSquare.Position;
+            startSquare.Occupy(instance);
+
+            return instance;
         }
         /// <summary>
         /// Returns current global instance of Adventurer class.
@@ -135,12 +143,6 @@ namespace Bomberman.Game.Movable
             this._bombs = bombs;
             this.BombsLimit = 2;
 
-            var startSquare = this._map.GetStartSquare();
-            this.X = startSquare.X;
-            this.Y = startSquare.Y;
-            this.Position = startSquare.Position;
-            startSquare.Occupy(this);
-
             this.InitialSpeed = 0.2f;
             this.IsMoving = false;
         }
@@ -148,7 +150,23 @@ namespace Bomberman.Game.Movable
 
     partial class Adventurer
     {
-        public override System.Xml.Serialization.IXmlSerializable GetInfo()
+        public static Adventurer ConstructInstance(IXmlSerializable info, Map.Map map, List<Items.Bomb> bombs)
+        {
+            var adventurerInfo = (AdventurerInfo)info;
+            Adventurer adventurer = new Adventurer(map, bombs);
+            adventurer.BombsLimit = adventurerInfo.BombsLimit;
+            adventurer.X = adventurerInfo.X;
+            adventurer.Y = adventurerInfo.Y;
+            adventurer.Position = adventurerInfo.Position;
+
+            Adventurer.instance = adventurer;
+            return adventurer;
+        }
+        public void Construct(System.Xml.Serialization.IXmlSerializable info)
+        {
+            throw new NotImplementedException();
+        }
+        public override System.Xml.Serialization.IXmlSerializable ToInfo()
         {
             var info = new AdventurerInfo(X, Y, Position, GetType().Name, BombsLimit);
             return info;

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Serialization;
 using Bomberman.Game.Items;
 using Bomberman.Game.Items.Modifiers;
+using Bomberman.Game.Serialization;
 
 namespace Bomberman.Game.Map
 {
@@ -59,6 +61,35 @@ namespace Bomberman.Game.Map
                         break;
                     default:
                         throw new BombermanException("Could not parse square " + squareText);
+                }
+                return element;
+            }
+            public static MapElement ConstructSquare(IXmlSerializable info)
+            {
+                MapElement element = null;
+                MapElementInfo squareInfo = (MapElementInfo)info;
+                int x = squareInfo.X;
+                int y = squareInfo.Y;
+
+                switch (squareInfo.Type)
+                {
+                    case "Ground":
+                        element = new Ground(x, y);
+                        break;
+                    case "Woods":
+                        element = new Woods(x, y);
+                        if (squareInfo.Collectable != null)
+                        {
+                            var collectableInfo = (CollectableInfo)squareInfo.Collectable;
+                            var collectable = CollectableFactory.Construct(collectableInfo);
+                            element.AddCollectable(collectable);
+                        }
+                        break;
+                    case "Rock":
+                        element = new Rock(x, y);
+                        break;
+                    default:
+                        throw new BombermanException("Could not construct square.");
                 }
                 return element;
             }

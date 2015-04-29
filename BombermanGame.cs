@@ -126,8 +126,15 @@ namespace Bomberman
             else
             {
                 //display menu
-                _UIManager.ShowMainMenu();
-                _UIManager.Update(move);
+                try
+                {
+                    _UIManager.ShowMainMenu();
+                    _UIManager.Update(move);
+                }
+                catch (BombermanException bombermanException)
+                {
+                    logger.Log(bombermanException);
+                }
             }
 
             base.Update(gameTime);
@@ -216,7 +223,10 @@ namespace Bomberman
 
         public void LoadGame()
         {
-            FileManager.LoadGameFile("Alek");
+            var gameState = FileManager.LoadGameFile("Alek");
+            _GameManager.LoadGame(gameState);
+            IsGameRunning = true;
+            this._GameManager.LoadContent(this.Content);
         }
 
         public void ResumeGame()

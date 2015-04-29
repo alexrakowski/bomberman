@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Bomberman.Game.Serialization;
+using System.Xml.Serialization;
 
 
 namespace Bomberman.Game.Items
@@ -38,7 +39,7 @@ namespace Bomberman.Game.Items
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (this.HasExploded)
+            if (this.HasExploded && AffectedPositions != null)
             {
                 var texture = Bomb.FIRE_TEXTURE;
                 foreach (var firePos in AffectedPositions)
@@ -128,12 +129,25 @@ namespace Bomberman.Game.Items
 
     partial class Bomb : IToInfo
     {
-
-        public override System.Xml.Serialization.IXmlSerializable GetInfo()
+        public void Construct(System.Xml.Serialization.IXmlSerializable info)
+        {
+            base.Construct(info);
+            var bombInfo = (BombInfo)info;
+            this._time = bombInfo.Time;
+            this._explosionTime = bombInfo.ExplosionTime;
+            this.HasExploded = bombInfo.HasExploded;
+        }
+        public override System.Xml.Serialization.IXmlSerializable ToInfo()
         {
             var info = new BombInfo(X, Y, Position, GetType().Name, _time, _explosionTime, HasExploded);
 
             return info;
         }
+
+        public Bomb(IXmlSerializable info)
+        {
+            this.Construct(info);
+        }
+        private Bomb() { }
     }
 }

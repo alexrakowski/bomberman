@@ -14,5 +14,6 @@ namespace Bomberman.Game.Items
         {
             this.Position = position;
         }
+        protected CollectableElement() { }
     }
 }

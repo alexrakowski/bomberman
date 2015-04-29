@@ -9,6 +9,7 @@ namespace Bomberman.Game.Serialization
 {
     public interface IToInfo
     {
-        IXmlSerializable GetInfo();
+        IXmlSerializable ToInfo();
+        void Construct(IXmlSerializable info);
     }
 }

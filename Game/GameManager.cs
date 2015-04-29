@@ -139,6 +139,21 @@ namespace Bomberman.Game
 
             StartLevel(level);
         }
+        public void LoadGame(object gameStateObj)
+        {
+            GameState gameState;
+            try
+            {
+                gameState = (GameState)gameStateObj;
+            }
+            catch (InvalidCastException exception)
+            {
+                throw new BombermanException("Could not parse Game State. \n" + exception.Message);
+            }
+
+            LevelFactory.LoadLevel(gameState, out _gameInfo, out _map, out _adventurer, out _enemies, out _bombs, out _modifiers);
+        }
+
         private void StartLevel(GameLevels level)
         {
             _modifiers = new List<Modifier>();
@@ -170,11 +185,11 @@ namespace Bomberman.Game
             GameState gameState = new GameState();
 
             gameState.GameInfo = _gameInfo;
-            gameState.Player = (AdventurerInfo) _adventurer.GetInfo();
-            gameState.Enemies = _enemies.Select(enemy => enemy.GetInfo()).ToList();
-            gameState.Map = _map.GetInfo();
-            gameState.Modifiers = _modifiers.Select(modifier => modifier.GetInfo()).ToList();
-            gameState.Bombs = _bombs.Select(bomb => (BombInfo)bomb.GetInfo()).ToList();
+            gameState.Player = (AdventurerInfo) _adventurer.ToInfo();
+            gameState.Enemies = _enemies.Select(enemy => enemy.ToInfo()).ToList();
+            gameState.Map = _map.ToInfo();
+            gameState.Modifiers = _modifiers.Select(modifier => modifier.ToInfo()).ToList();
+            gameState.Bombs = _bombs.Select(bomb => (BombInfo)bomb.ToInfo()).ToList();
 
             return gameState;
         }

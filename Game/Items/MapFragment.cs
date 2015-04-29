@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Bomberman.Game.Serialization;
+using System.Xml.Serialization;
 
 namespace Bomberman.Game.Items
 {
@@ -33,7 +34,7 @@ namespace Bomberman.Game.Items
     }
     partial class MapFragment
     {
-        public override System.Xml.Serialization.IXmlSerializable GetInfo()
+        public override System.Xml.Serialization.IXmlSerializable ToInfo()
         {
             var info = new MapFragmentInfo(X, Y, Position, GetType().Name);
 
@@ -44,5 +45,10 @@ namespace Bomberman.Game.Items
         {
             collector.AddMapFragment();
         }
+        public MapFragment(IXmlSerializable info)
+        {
+            this.Construct(info);
+        }
+        private MapFragment() { }
     }
 }

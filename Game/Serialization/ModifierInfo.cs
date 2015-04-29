@@ -21,7 +21,9 @@ namespace Bomberman.Game.Serialization
 
         public void ReadXml(System.Xml.XmlReader reader)
         {
-            throw new NotImplementedException();
+            this.Time = Int32.Parse(reader.ReadElementString());
+            this.Type = reader.ReadElementString();
+            reader.ReadEndElement();
         }
 
         public void WriteXml(System.Xml.XmlWriter writer)

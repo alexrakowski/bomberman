@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Bomberman.Game.Items;
+using Bomberman.Game.Items.Modifiers;
 using Bomberman.Game.Map;
 using Bomberman.Game.Movable;
+using Bomberman.Game.Serialization;
 
 namespace Bomberman.Game
 {
@@ -23,7 +26,6 @@ namespace Bomberman.Game
             }
             enemies = GetEnemies(level, map);
         }
-
         private static int GetMapFragmentsToFind(GameLevels level)
         {
             switch (level)
@@ -93,6 +95,47 @@ namespace Bomberman.Game
                 enemies.Add(wolf);
             }
             return enemies;
+        }
+
+        public static void LoadLevel(GameState gameState, out GameInfo gameInfo, out Map.Map map, out Adventurer adventurer, 
+            out List<Enemy> enemies, out List<Bomb> bombs, out List<Modifier> modifiers)
+        {
+            gameInfo = (GameInfo)gameState.GameInfo;
+            map = new Map.Map(gameState.Map);
+
+            enemies = new List<Enemy>();
+            if (gameState.Enemies != null)
+            {
+                foreach (var info in gameState.Enemies)
+                {
+                    //var enemy = null;
+                    //enemies.Add(enemy);
+                }
+            }
+
+            bombs = new List<Bomb>();
+            if (gameState.Bombs != null)
+            {
+                foreach (var info in gameState.Bombs)
+                {
+                    var bomb = new Bomb(info);
+                    bombs.Add(bomb);
+                    map.OccupySquare(bomb);
+                }
+            }
+
+            adventurer = Adventurer.ConstructInstance(gameState.Player, map, bombs);
+            map.OccupySquare(adventurer);
+
+            modifiers = new List<Modifier>();
+            if (gameState.Modifiers != null)
+            {
+                foreach (var info in gameState.Modifiers)
+                {
+                    var modifier = ModifierFactory.Construct(info);
+                    modifiers.Add(modifier);
+                }
+            }
         }
     }
 }

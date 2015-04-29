@@ -103,11 +103,15 @@ namespace Bomberman.Game.Movable
             startSquare.Occupy(this);
         }
 
-        public override System.Xml.Serialization.IXmlSerializable GetInfo()
+        public override System.Xml.Serialization.IXmlSerializable ToInfo()
         {
             var info = new EnemyInfo(X, Y, Position, GetType().Name);
 
             return info;
+        }
+        public void Construct(System.Xml.Serialization.IXmlSerializable info)
+        {
+            throw new NotImplementedException();
         }
     }
 }

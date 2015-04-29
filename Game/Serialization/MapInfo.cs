@@ -21,9 +21,11 @@ namespace Bomberman.Game.Serialization
             this.StartPosition = Utils.Parser.ParseIntTuple(reader.GetAttribute("StartPosition"));
             this.Width = Int32.Parse(reader.GetAttribute("Width"));
             this.Height = Int32.Parse(reader.GetAttribute("Heigth"));
+            reader.Read();
 
             this.Squares = new MapElementInfo[this.Width, this.Height];
             //Squares
+            int squaresParsed = 0;
             if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Squares" && !reader.IsEmptyElement)
             {
                 reader.Read();
@@ -31,14 +33,18 @@ namespace Bomberman.Game.Serialization
                 while (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "MapElement")
                 {
                     var square = new MapElementInfo(reader);
-                    //this.Modifiers.Add(modifier);
+                    this.Squares[square.X, square.Y] = square;
+                    squaresParsed++;
                 }
-                reader.ReadEndElement();
-
             }
             else
             {
                 throw new BombermanException("Could not parse Map's Squares");
+            }
+            if (squaresParsed != Width * Height)
+            {
+                throw new BombermanException("Not enough Map Squares parsed. Parsed " + squaresParsed.ToString()
+                    + ", should be: " + (Height * Width).ToString());
             }
         }
 

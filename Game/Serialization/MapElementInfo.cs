@@ -14,11 +14,23 @@ namespace Bomberman.Game.Serialization
 
         public void ReadXml(System.Xml.XmlReader reader)
         {
-            if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Collectable")
+            reader.ReadStartElement();
+            var type = reader.MoveToContent();
+            if (reader.LocalName == "Collectable")
             {
                 if (!reader.IsEmptyElement)
                 {
-                    this.Collectable = new CollectableInfo(reader);
+                    reader.Read();
+                    if (reader.LocalName == "Modifier")
+                    {
+                        //Bonus
+                        this.Collectable = new BonusInfo(reader);
+                    }
+                    else
+                    {
+                        //MapFragment
+                        this.Collectable = new MapFragmentInfo(reader);
+                    }
                 }
                 else
                 {

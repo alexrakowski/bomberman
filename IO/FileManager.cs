@@ -99,7 +99,7 @@ namespace Bomberman.IO
                 obj = (Bomberman.Game.Serialization.GameState)serializer.Deserialize(reader);
             }
 
-            return null;
+            return obj;
         }
     }
 }

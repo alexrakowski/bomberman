@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 using Bomberman.Game.Items.Modifiers;
 using Bomberman.Game.Serialization;
 using Microsoft.Xna.Framework;
@@ -22,13 +23,24 @@ namespace Bomberman.Game.Items
             collector.AddModifier(this.Modifier);
         }
 
-        public override System.Xml.Serialization.IXmlSerializable GetInfo()
+        public override System.Xml.Serialization.IXmlSerializable ToInfo()
         {
             var info = new BonusInfo(X, Y, Position, GetType().Name);
-            info.Modifier = (ModifierInfo)Modifier.GetInfo();
+            info.Modifier = (ModifierInfo)Modifier.ToInfo();
             return info;
         }
+        public void Construct(System.Xml.Serialization.IXmlSerializable info)
+        {
+            base.Construct(info);
+            var bonusInfo = (BonusInfo)info;
+            this.Modifier = ModifierFactory.Construct(bonusInfo.Modifier);
+        }
 
+        public Bonus(IXmlSerializable info)
+        {
+            this.Construct(info);
+        }
+        private Bonus() { }
         public Bonus(Vector2 position) : base(position) { }
         public Bonus(Vector2 position, Modifier modifier) : base(position) { this.Modifier = modifier; }
     }

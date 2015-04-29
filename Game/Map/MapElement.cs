@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 using Bomberman.Game.Items;
 using Bomberman.Game.Serialization;
 using Microsoft.Xna.Framework;
@@ -66,13 +67,27 @@ namespace Bomberman.Game.Map
             return pointsScored;
         }
 
-        public override System.Xml.Serialization.IXmlSerializable GetInfo()
+        public override System.Xml.Serialization.IXmlSerializable ToInfo()
         {
             MapElementInfo info = new MapElementInfo(X, Y, Position, GetType().Name);
             if (Collectable != null)
-                info.Collectable = (CollectableInfo) this.Collectable.GetInfo();
+                info.Collectable = (CollectableInfo) this.Collectable.ToInfo();
 
             return info;
+        }
+
+        System.Xml.Serialization.IXmlSerializable IToInfo.ToInfo()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Construct(System.Xml.Serialization.IXmlSerializable info)
+        {
+            throw new NotImplementedException();
+        }
+        public MapElement(IXmlSerializable info)
+        {
+            this.Construct(info);
         }
     }
 

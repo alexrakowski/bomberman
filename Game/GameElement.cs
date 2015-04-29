@@ -25,7 +25,13 @@ namespace Bomberman.Game
         }
         public void PlaySound() { throw new NotImplementedException(); }
 
-        public abstract IXmlSerializable GetInfo();
-
+        public abstract IXmlSerializable ToInfo();
+        public void Construct(IXmlSerializable info)
+        {
+            var gameElementInfo = (GameElementInfo)info;
+            this.X = gameElementInfo.X;
+            this.Y = gameElementInfo.Y;
+            this.Position = gameElementInfo.Position;
+        }
     }
 }

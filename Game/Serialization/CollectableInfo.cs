@@ -10,11 +10,6 @@ namespace Bomberman.Game.Serialization
 {
     public abstract class CollectableInfo : GameElementInfo
     {
-        public void ReadXml(System.Xml.XmlReader reader)
-        {
-            
-        }
-
         public abstract void WriteXml(System.Xml.XmlWriter writer);
 
         public CollectableInfo(XmlReader reader)

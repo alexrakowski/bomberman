@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Serialization;
 using Bomberman.Game.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -34,7 +35,7 @@ namespace Bomberman.Game.Map
 
         public MapElement GetSquare(int x, int y)
         {
-            if (x >= 0 && x <= _mapElements.GetUpperBound(0) && y>=0 && y <= _mapElements.GetUpperBound(1))
+            if (x >= 0 && x <= _mapElements.GetUpperBound(0) && y >= 0 && y <= _mapElements.GetUpperBound(1))
             {
                 return _mapElements[x, y];
             }
@@ -55,7 +56,7 @@ namespace Bomberman.Game.Map
                     freeSquares.Add(square);
                 }
             }
-            
+
             return freeSquares;
         }
         public int DestroySquare(int x, int y)
@@ -72,7 +73,7 @@ namespace Bomberman.Game.Map
                 {
                     value += square.Destroy();
                     this._mapElements[x, y] = new Ground(x, y);
-                    if ( square.Collectable != null)
+                    if (square.Collectable != null)
                         this._mapElements[x, y].AddCollectable(square.Collectable);
                 }
             }
@@ -112,12 +113,13 @@ namespace Bomberman.Game.Map
             return distance;
         }
 
-        private Map(MapElement[,] elements, int x, int y) { 
+        private Map(MapElement[,] elements, int x, int y)
+        {
             _mapElements = elements;
             startPosition = new Tuple<int, int>(x, y);
         }
 
-        public System.Xml.Serialization.IXmlSerializable GetInfo()
+        public System.Xml.Serialization.IXmlSerializable ToInfo()
         {
             int width = _mapElements.GetUpperBound(0) + 1;
             int height = _mapElements.GetUpperBound(1) + 1;
@@ -127,7 +129,7 @@ namespace Bomberman.Game.Map
             {
                 for (int y = 0; y < height; ++y)
                 {
-                    squareInfos[x, y] = (MapElementInfo)_mapElements[x, y].GetInfo();
+                    squareInfos[x, y] = (MapElementInfo)_mapElements[x, y].ToInfo();
                 }
             }
 
@@ -138,5 +140,27 @@ namespace Bomberman.Game.Map
 
             return info;
         }
+
+        public void Construct(System.Xml.Serialization.IXmlSerializable info)
+        {
+            MapInfo mapInfo = (MapInfo)info;
+            this.startPosition = mapInfo.StartPosition;
+            this._mapElements = new MapElement[mapInfo.Width, mapInfo.Height];
+
+            for (int x = 0; x < mapInfo.Width; ++x)
+            {
+                for (int y = 0; y < mapInfo.Height; ++y)
+                {
+                    var squareInfo = mapInfo.Squares[x, y];
+                    this._mapElements[x, y] = MapFactory.ConstructSquare(squareInfo);
+                }
+            }
+        }
+
+        public Map(IXmlSerializable info)
+        {
+            Construct(info);
+        }
+        private Map() { }
     }
 }

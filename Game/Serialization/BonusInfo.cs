@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using Microsoft.Xna.Framework;
 
 namespace Bomberman.Game.Serialization
@@ -11,7 +12,8 @@ namespace Bomberman.Game.Serialization
         public ModifierInfo Modifier;
         public void ReadXml(System.Xml.XmlReader reader)
         {
-            throw new NotImplementedException();
+            this.Modifier = new ModifierInfo(reader);
+            (this as GameElementInfo).ReadXml(reader);
         }
         public override void WriteXml(System.Xml.XmlWriter writer)
         {
@@ -21,6 +23,11 @@ namespace Bomberman.Game.Serialization
             (this as GameElementInfo).WriteXml(writer);
         }
 
+        public BonusInfo(XmlReader reader)
+        {
+            this.ReadXml(reader);
+        }
+        public BonusInfo() { }
         public BonusInfo(int X, int Y, Vector2 Position, string Type) : base(X, Y, Position, Type) { }
     }
 }

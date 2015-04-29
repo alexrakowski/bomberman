@@ -25,9 +25,8 @@ namespace Bomberman.Game.Serialization
             this.Type = reader.ReadElementString();
             this.X = Int32.Parse(reader.ReadElementString());
             this.Y = Int32.Parse(reader.ReadElementString());
-            
-            //TODO: parse position
-            reader.ReadElementString();
+            this.Position = Utils.Parser.ParseVector2(reader.ReadElementString());
+
             reader.ReadEndElement();
         }
 

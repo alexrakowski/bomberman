@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace Bomberman.Utils
 {
@@ -26,6 +27,22 @@ namespace Bomberman.Utils
             elem2 = Int32.Parse(tmp.Substring(commaPosition + 1)); 
 
             return new Tuple<int, int>(elem1, elem2);
+        }
+        public static Vector2 ParseVector2(string text)
+        {
+            float x, y;
+
+            int xStart = text.IndexOf("X:") + 2;
+            int xLen = text.IndexOf("Y") - xStart - 1;
+            int yStart = text.IndexOf("Y:") + 2;
+            int yLen = text.IndexOf("}") - yStart;
+
+            string xText = text.Substring(xStart, xLen);
+            x = float.Parse(xText);
+            string yText = text.Substring(yStart, yLen);
+            y = float.Parse(yText);
+
+            return new Vector2(x, y);
         }
     }
 }
