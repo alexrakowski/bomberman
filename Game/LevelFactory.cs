@@ -13,19 +13,20 @@ namespace Bomberman.Game
 {
     static class LevelFactory
     {
-        public static void CreateLevel(GameLevels level, Map.Map map, ref GameInfo gameInfo, out List<Enemy> enemies)
+        public static void CreateLevel(GameLevels level, Map.Map map, ref GameInfo gameInfo, out List<Enemy> enemies, List<Bomb> bombs)
         {
             int mapFragmentsToFind = GetMapFragmentsToFind(level);
+            int time = GetTimeForLevel(level);
             if (gameInfo == null)
             {
-                gameInfo = new Game.GameInfo("Alek", mapFragmentsToFind, level);
+                gameInfo = new Game.GameInfo("Alek", mapFragmentsToFind, level, time);
             }
             else
             {
-                var newInfo = new GameInfo("Alek", mapFragmentsToFind, level, gameInfo.Score, gameInfo.Lifes);
+                var newInfo = new GameInfo("Alek", mapFragmentsToFind, level, time, gameInfo.Score, gameInfo.Lifes);
                 gameInfo = newInfo;
             }
-            enemies = GetEnemies(level, map);
+            enemies = GetEnemies(level, map, bombs);
         }
         private static int GetMapFragmentsToFind(GameLevels level)
         {
@@ -41,7 +42,7 @@ namespace Bomberman.Game
                     return 3;
             }
         }
-        private static List<Enemy> GetEnemies(GameLevels level, Map.Map map)
+        private static List<Enemy> GetEnemies(GameLevels level, Map.Map map, List<Bomb> bombs)
         {
             List<Enemy> enemies = new List<Enemy>();
             int wolvesCount = 0;
@@ -107,6 +108,13 @@ namespace Bomberman.Game
                 enemies.Add(fox);
                 freeSquares.Remove(square);
             }
+            for (int i = 0; i < bearsCount; ++i)
+            {
+                square = freeSquares.First();
+                var bear = new Bear(map, square, bombs);
+                enemies.Add(bear);
+                freeSquares.Remove(square);
+            }
 
             return enemies;
         }
@@ -150,6 +158,21 @@ namespace Bomberman.Game
                     modifiers.Add(modifier);
                     modifier.Apply(gameInfo, enemies, adventurer);
                 }
+            }
+        }
+
+        public static int GetTimeForLevel(GameLevels level)
+        {
+            switch (level)
+            {
+                case GameLevels.First:
+                    return 200;
+                case GameLevels.Second:
+                    return 300;
+                case GameLevels.Third:
+                    return 400;
+                default:
+                    return 1000;
             }
         }
     }

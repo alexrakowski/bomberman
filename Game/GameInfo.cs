@@ -15,33 +15,34 @@ namespace Bomberman.Game
         public int Score;
         public double Time;
         public int Lifes;
-        string PlayerName;
+        public string PlayerName;
         public GameLevels Level;
 
         int [] mapFragmentsFound;
         public int foundFragments { get { return mapFragmentsFound[0]; } private set { return; } }
         public int fragmentsToFind { get { return mapFragmentsFound[1]; } private set { return; } }
 
-        public GameInfo(string playerName, int fragmentsToFind, GameLevels level)
+        public GameInfo(string playerName, int fragmentsToFind, GameLevels level, double time)
         {
             Score = 0;
-            Time = 1000;
+            Time = time;
             Lifes = 3;
             Level = level;
  
             mapFragmentsFound = new int[2] { 0, fragmentsToFind };
         }
-
-        public GameInfo(string playerName, int fragmentsToFind, GameLevels level, int score, int lifes)
+                                                                                  
+        public GameInfo(string playerName, int fragmentsToFind, GameLevels level, double time, int score, int lifes)
         {
             Score = score;
-            Time = 1000;
+            Time = time;
             Lifes = lifes;
             Level = level;
 
             mapFragmentsFound = new int[2] { 0, fragmentsToFind };
         }
 
+        #region Serialization
         public GameInfo() { }
 
         public System.Xml.Schema.XmlSchema GetSchema()
@@ -70,11 +71,9 @@ namespace Bomberman.Game
             writer.WriteElementString("MapFragmentsFound", mapFragmentsFound[0].ToString());
             writer.WriteElementString("MapFragmentsToFind", mapFragmentsFound[1].ToString());
         }
-    }
+        #endregion
 
-    //setters
-    partial class GameInfo
-    {
+        #region Setters
         /// <summary>
         /// Increments found map fragments
         /// </summary>
@@ -118,5 +117,6 @@ namespace Bomberman.Game
         {
             this.Level = (GameLevels)((int)Level + 1);
         }
+        #endregion
     }
 }

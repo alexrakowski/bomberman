@@ -13,10 +13,11 @@ using System.Xml.Serialization;
 
 namespace Bomberman.Game.Items
 {
-    partial class Bomb : DestroyableElement
+    class Bomb : DestroyableElement
     {
+        #region Drawing
         public const string ASSET_NAME = "textures/items/bomb";
-        public const string FIRE_ASSET_NAME = "textures/movable_objects/MockAdventurer";
+        public const string FIRE_ASSET_NAME = "textures/items/fire";
         public const string EXPLODED_ASSET_NAME = "textures/items/explosion";
         private static Texture2D TEXTURE;
         private static Texture2D FIRE_TEXTURE;
@@ -51,15 +52,24 @@ namespace Bomberman.Game.Items
             }
             base.Draw(spriteBatch);
         }
-    }
+        #endregion
 
-    //bomb logic
-    partial class Bomb : DestroyableElement
-    {
+        #region BombLogic
         const int BOMB_TIME_IN_MSECONDS = 3000;
         const int EXPLOSION_TIME_IN_MSECONDS = 500;
         private int _time = BOMB_TIME_IN_MSECONDS;
         private int _explosionTime = EXPLOSION_TIME_IN_MSECONDS;
+
+        public static int GetRange() { return RANGE; }
+        private static int RANGE = 1;
+        public static void ResetRange()
+        {
+            RANGE = 1;
+        }
+        public static void IncrementRange()
+        {
+            RANGE++;
+        }
 
         public bool HasExploded { get; private set; }
         List<Vector2> AffectedPositions;
@@ -81,18 +91,57 @@ namespace Bomberman.Game.Items
         public int Explode(Map.Map map)
         {
             this.HasExploded = true;
-            int score;
             int pointsScored = 0;
             List<MapElement> squares = new List<MapElement>();
             AffectedPositions = new List<Vector2>();
 
-            for (int x = this.X - 1; x <= this.X + 1; ++x)
+            for (int x = this.X; x <= this.X + RANGE; ++x)
             {
+                var square = map.GetSquare(x, Y);
+                if (square == null)
+                    break;
+                if (!square.CanBeAffected && !square.CanBeDestroyed)
+                {
+                    //ROCK
+                    break;
+                }
                 squares.Add(map.GetSquare(x, this.Y));
             }
-            for (int y = this.Y - 1; y <= this.Y + 1; ++y)
+            for (int x = this.X; x >= this.X - RANGE; --x)
             {
-                squares.Add(map.GetSquare(this.X, y));
+                var square = map.GetSquare(x, Y);
+                if (square == null)
+                    break;
+                if (!square.CanBeAffected && !square.CanBeDestroyed)
+                {
+                    //ROCK
+                    break;
+                }
+                squares.Add(map.GetSquare(x, this.Y));
+            }
+            for (int y = this.Y; y <= this.Y + RANGE; ++y)
+            {
+                var square = map.GetSquare(X, y);
+                if (square == null)
+                    break;
+                if (!square.CanBeAffected && !square.CanBeDestroyed)
+                {
+                    //ROCK
+                    break;
+                }
+                squares.Add(map.GetSquare(X, y));
+            }
+            for (int y = this.Y; y >= this.Y - RANGE; --y)
+            {
+                var square = map.GetSquare(X, y);
+                if (square == null)
+                    break;
+                if (!square.CanBeAffected && !square.CanBeDestroyed)
+                {
+                    //ROCK
+                    break;
+                }
+                squares.Add(map.GetSquare(X, y));
             }
             foreach (var square in squares)
             {
@@ -125,10 +174,9 @@ namespace Bomberman.Game.Items
             this.Y = y;
             this.Position = position;
         }
-    }
+        #endregion
 
-    partial class Bomb : IToInfo
-    {
+        #region Serialization
         public void Construct(System.Xml.Serialization.IXmlSerializable info)
         {
             base.Construct(info);
@@ -149,5 +197,6 @@ namespace Bomberman.Game.Items
             this.Construct(info);
         }
         private Bomb() { }
+        #endregion
     }
 }

@@ -14,7 +14,7 @@ namespace Bomberman.Game.Items.Modifiers
 {
     abstract partial class Modifier
     {
-        public int Time { get; protected set; }
+        public double Time { get; protected set; }
         public void Apply(GameInfo gameInfo, List<Enemy> enemies, Adventurer adventurer)
         {
             SetTime();
@@ -22,23 +22,32 @@ namespace Bomberman.Game.Items.Modifiers
         }
         public void Update(int elapsedTime, GameInfo gameInfo, List<Enemy> enemies, Adventurer adventurer)
         {
-            Time -= elapsedTime;
+            Time -= (double)elapsedTime / 100;
             if (Time < 0)
             {
                 OnTimeEnded(gameInfo, enemies, adventurer);
             }
         }
-
+        public void EndNow(GameInfo gameInfo, List<Enemy> enemies, Adventurer adventurer)
+        {
+            OnTimeEnded(gameInfo, enemies, adventurer);
+        }
         protected abstract void OnApply(GameInfo gameInfo, List<Enemy> enemies, Movable.Adventurer adventurer);
         protected abstract void OnTimeEnded(GameInfo gameInfo, List<Enemy> enemies, Adventurer adventurer);
-        protected abstract void SetTime();       
+        protected abstract void SetTime();
+        public abstract bool EndsOnPlayerDeath { get; }
+
+        public Modifier()
+        {
+            SetTime();
+        }
     }
 
     abstract partial class Modifier : IToInfo
     {
         public System.Xml.Serialization.IXmlSerializable ToInfo()
         {
-            var info = new ModifierInfo(Time, GetType().Name);
+            var info = new ModifierInfo((int)Time, GetType().Name);
 
             return info;
         }

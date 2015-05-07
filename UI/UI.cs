@@ -9,8 +9,6 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Bomberman.UI
 {
-    
-   
     //TODO: Singleton
     class UIManager : IDrawable
     {
@@ -25,7 +23,6 @@ namespace Bomberman.UI
             if (_currentMenu != null) return; //TODO: change
             _currentMenu = new MainMenu(this._iGame);
         }
-        public void ShowOptionsMenu() { throw new NotImplementedException(); }
         public void ShowLoginMenu()
         {
             if (_currentMenu != null) return;
@@ -38,6 +35,10 @@ namespace Bomberman.UI
         public void ShowGameOverMenu()
         {
             _currentMenu = new GameOverMenu(this._iGame);
+        }
+        public void ShowVictoryMenu()
+        {
+            _currentMenu = new VictoryMenu(this._iGame);
         }
 
         public void Update(Moves move)

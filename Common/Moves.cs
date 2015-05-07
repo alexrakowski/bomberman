@@ -11,8 +11,4 @@ namespace Bomberman
     {
         Up, Down, Right, Left, Fire, Enter, Pause, None
     }
-    public enum OptionType
-    {
-
-    }
 }

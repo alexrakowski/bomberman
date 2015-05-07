@@ -8,12 +8,7 @@ using System.Xml.Serialization;
 
 namespace Bomberman.Game.Movable
 {
-    public interface IMovable
-    {
-        void Move(int elapsedTime, Moves move = Moves.None);
-        bool IsMoving { get; }
-        Moves Direction { get; }
-    }
+    
 
     abstract partial class MovableElement : DestroyableElement, IMovable
     {
@@ -24,7 +19,7 @@ namespace Bomberman.Game.Movable
         protected float _distanceLeft;
         protected Map.Map _map;
 
-        public abstract bool CanFly { get; protected set; }
+        public abstract bool CanFly { get;  }
         public abstract bool CanAttack { get; protected set; }
 
         public abstract void Move(int elapsedTime, Moves moveDirection = Moves.None);
@@ -139,6 +134,14 @@ namespace Bomberman.Game.Movable
         }
         [System.ComponentModel.DefaultValue(false)]
         public bool IsMoving { get; protected set; }
+        public bool IsParalyzed { get; protected set; }
+        private int _paralyzeCounter = 0;
+        public void Paralyze() { this.IsParalyzed = true; this._paralyzeCounter++; }
+        public void UnParalyze() 
+        { 
+            if ((--_paralyzeCounter) < 1) 
+                this.IsParalyzed = false; 
+        }
         public Moves Direction { get; protected set; }
         private void StopMove()
         {

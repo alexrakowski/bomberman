@@ -18,17 +18,13 @@ namespace Bomberman.UI.Menus
                     break;
                 // Load Game
                 case 1:
-                    _iGame.LoadGame();
-                    break;
+                    return new LoadGameMenu(this._iGame, this);
                 //High Scores
                 case 2:
-                    throw new NotImplementedException();
-                    break;
-
+                    return new HighScoresMenu(this._iGame, this);
                 //Settings
                 case 3:
                     return new SettingsMenu(this._iGame, this);
-                    break;
                 //Exit
                 case 4:
                     _iGame.Quit();
@@ -40,7 +36,7 @@ namespace Bomberman.UI.Menus
         public MainMenu(IGame iGame)
             : base(iGame)
         {
-            this.Title = "Menu";
+            this.Title = "Main Menu";
             string[] positions = { "New Game", "Load Game", "High Scores", "Settings", "Exit" };
             this._positions = positions;
         }

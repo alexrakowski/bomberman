@@ -16,7 +16,6 @@ namespace Bomberman.Game.Movable.Enemies
             {
                 return false;
             }
-            protected set {}
         }
         private static int POINTS_VALUE = 200;
 

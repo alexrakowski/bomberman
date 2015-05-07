@@ -21,11 +21,17 @@ namespace Bomberman.Game.Items.Modifiers
 
         protected override void SetTime()
         {
-            Time = 20;
+            Time = 200;
         }
         public Indestructible(int time)
         {
             Time = time;
+        }
+        public Indestructible() : base() { }
+
+        public override bool EndsOnPlayerDeath
+        {
+            get { return true; }
         }
     }
 }

@@ -7,21 +7,19 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Bomberman
 {
-    public interface IDrawable
-    {
-        void Draw(SpriteBatch spriteBatch);
-        void LoadContent(ContentManager content);
-    }
+    
     public interface IGame
     {
         void NewGame();
         void SaveGame();
-        void LoadGame();
+        void LoadGame(string filename);
         void ResumeGame();
         string[] GetSavedGames();
         string[][] LoadMapFile(string mapName);
         Tuple<string, int>[] GetHighScores();
-        void ToggleOption(OptionType option);
+        void UpdateHighScores(string playerName, int score);
+        string ToggleOption(OptionType option);
+        string GetOptionValue(OptionType option);
         void Login(string nickname);
         void Quit();
     }

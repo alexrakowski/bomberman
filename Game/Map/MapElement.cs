@@ -20,10 +20,19 @@ namespace Bomberman.Game.Map
         public abstract bool IsWalkingTerrain { get; }
         public abstract bool IsFlyingTerrain { get; }
         public abstract bool IsContainerTerrain { get; }
+        public abstract bool IsCollectableTerrain { get; }
         public abstract bool CanBeDestroyed { get; }
         public abstract bool CanBeAffected { get; }
+        public abstract bool CanHaveBombsPut { get; }
 
-        public bool IsOccupied { get { return OccupyingElements.Count > 0; } }
+        public bool IsOccupied
+        {
+            get
+            {
+                OccupyingElements.RemoveAll(elem => elem.IsDead);
+                return OccupyingElements.Count > 0;
+            }
+        }
         public void Occupy(DestroyableElement element) { OccupyingElements.Add(element); }
         public void Leave(DestroyableElement element) { OccupyingElements.Remove(element); }
         public void AddCollectable(CollectableElement collectable) { this.Collectable = collectable; }
@@ -35,7 +44,7 @@ namespace Bomberman.Game.Map
             return collectable;
         }
 
-        public void Draw(SpriteBatch spriteBatch) 
+        public void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
             if (this.Collectable != null && !this.CanBeDestroyed)
@@ -71,7 +80,7 @@ namespace Bomberman.Game.Map
         {
             MapElementInfo info = new MapElementInfo(X, Y, Position, GetType().Name);
             if (Collectable != null)
-                info.Collectable = (CollectableInfo) this.Collectable.ToInfo();
+                info.Collectable = (CollectableInfo)this.Collectable.ToInfo();
 
             return info;
         }
@@ -128,6 +137,16 @@ namespace Bomberman.Game.Map
         {
             get { return true; }
         }
+
+        public override bool IsCollectableTerrain
+        {
+            get { return true; }
+        }
+
+        public override bool CanHaveBombsPut
+        {
+            get { return true; }
+        }
     }
 
     class Woods : MapElement
@@ -166,6 +185,16 @@ namespace Bomberman.Game.Map
         {
             get { return true; }
         }
+
+        public override bool IsCollectableTerrain
+        {
+            get { return false; }
+        }
+
+        public override bool CanHaveBombsPut
+        {
+            get { return false; }
+        }
     }
 
     class Rock : MapElement
@@ -200,6 +229,16 @@ namespace Bomberman.Game.Map
         }
 
         public override bool CanBeAffected
+        {
+            get { return false; }
+        }
+
+        public override bool IsCollectableTerrain
+        {
+            get { return false; }
+        }
+
+        public override bool CanHaveBombsPut
         {
             get { return false; }
         }

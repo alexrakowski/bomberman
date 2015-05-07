@@ -9,22 +9,21 @@ using System.Xml.Serialization;
 
 namespace Bomberman.Game.Movable
 {
-    partial class Adventurer : MovableElement
+    class Adventurer : MovableElement
     {
-        public const string ASSET_NAME = "textures/movable_objects/MockAdventurer";
+        public const string ASSET_NAME = "textures/movable_objects/adventurer";
+        public const string INDESTRUCTIBLE_ASSET_NAME = "textures/movable_objects/adventurer_indestructible";
         private static Texture2D TEXTURE;
+        private static Texture2D INDESTRUCTIBLE_TEXTURE;
 
         public override bool CanFly
         {
             get
             {
-                return false;
-            }
-            protected set
-            {
-                throw new NotImplementedException();
+                return _canFly;
             }
         }
+        private bool _canFly = false;
         public override bool CanAttack
         {
             get
@@ -43,17 +42,20 @@ namespace Bomberman.Game.Movable
 
         private void PutBomb()
         {
-            var bomb = new Bomb(X, Y, Position);
-            _bombs.Add(bomb);
-            var square = _map.OccupySquare(bomb);
-            bomb.Position = square.Position;
+            if (_map.GetSquare(X, Y).CanHaveBombsPut)
+            {
+                var bomb = new Bomb(X, Y, Position);
+                _bombs.Add(bomb);
+                var square = _map.OccupySquare(bomb);
+                bomb.Position = square.Position;
+            }
         }
         public ICollectable PickCollectable()
         {
             ICollectable collectable = null;
-            if (!this.IsMoving)
+            var square = _map.GetSquare(X, Y);
+            if (!this.IsMoving && square.IsCollectableTerrain)
             {
-                var square = _map.GetSquare(X, Y);
                 collectable = square.PickCollectable();
             }
             return collectable;
@@ -77,15 +79,24 @@ namespace Bomberman.Game.Movable
         public override void LoadContent(ContentManager content)
         {
             Adventurer.TEXTURE = content.Load<Texture2D>(Adventurer.ASSET_NAME);
+            Adventurer.INDESTRUCTIBLE_TEXTURE = content.Load<Texture2D>(Adventurer.INDESTRUCTIBLE_ASSET_NAME);
         }
         public override Texture2D GetTexture()
         {
-            return Adventurer.TEXTURE;
+            if (this.IsIndestructible)
+            {
+                return Adventurer.INDESTRUCTIBLE_TEXTURE;
+            }else
+                return Adventurer.TEXTURE;
         }
 
         public void MakeAlive()
         {
             this.IsDead = false;
+        }
+        public void MakeFlying()
+        {
+            this._canFly = true;
         }
         public override int Destroy()
         {
@@ -100,9 +111,8 @@ namespace Bomberman.Game.Movable
         {
             return 0;
         }
-    }
-    partial class Adventurer
-    {
+
+        #region Singleton
         private static Adventurer instance;
         /// <summary>
         /// Creates new Adventurer instance
@@ -150,10 +160,9 @@ namespace Bomberman.Game.Movable
             this.InitialSpeed = INITIAL_SPEED * 2;
             this.IsMoving = false;
         }
-    }
+        #endregion
 
-    partial class Adventurer
-    {
+        #region Serialization
         public static Adventurer ConstructInstance(IXmlSerializable info, Map.Map map, List<Items.Bomb> bombs)
         {
             var adventurerInfo = (AdventurerInfo)info;
@@ -175,5 +184,6 @@ namespace Bomberman.Game.Movable
             var info = new AdventurerInfo(X, Y, Position, GetType().Name, BombsLimit);
             return info;
         }
+        #endregion
     }
 }

@@ -20,6 +20,7 @@ namespace Bomberman
     /// </summary>
     public partial class BombermanGame : Microsoft.Xna.Framework.Game, IGame
     {
+        #region Fields
         //Graphics
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -34,10 +35,14 @@ namespace Bomberman
         // Error Logger
         ILoggable logger;
 
+        //settings
+        private OptionsSettings _settings;
         public bool IsGameRunning { get; private set; }
         public string PlayerName { get; private set; }
         bool IsPlayerLoggedIn = true;
+        #endregion
 
+        #region XNAGame methods
         public BombermanGame()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -59,10 +64,12 @@ namespace Bomberman
         protected override void Initialize()
         {
             inputHelper = new InputHelper();
+            _settings = new OptionsSettings();
 
             //Managers
             _UIManager = new UI.UIManager(this, this.graphics);
             _GameManager = Game.GameManager.GetInstance((IGame)this);
+
             base.Initialize();
         }
 
@@ -124,9 +131,13 @@ namespace Bomberman
                     }
                     if (_GameManager.HasPlayerLost)
                     {
-                        _GameManager.HasPlayerLost = false;
                         IsGameRunning = false;
                         _UIManager.ShowGameOverMenu();
+                    }
+                    if (_GameManager.HasPlayerWon)
+                    {
+                        IsGameRunning = false;
+                        _UIManager.ShowVictoryMenu();
                     }
                 }
             }
@@ -175,6 +186,7 @@ namespace Bomberman
 
             base.Draw(gameTime);
         }
+        #endregion
 
         private Moves InputToMove(KeyboardState keyboardState)
         {
@@ -184,23 +196,46 @@ namespace Bomberman
 
             if (IsGameRunning)
             {
-                //TODO: WSAD
-                switch (key)
+                if (this._settings.Arrows)
                 {
-                    case Keys.Space:
-                        return inputHelper.IsNewPress(key) ? Moves.Fire : Moves.None;
-                    case Keys.Left:
-                        return Moves.Left;
-                    case Keys.Right:
-                        return Moves.Right;
-                    case Keys.Down:
-                        return Moves.Down;
-                    case Keys.Up:
-                        return Moves.Up;
+                    switch (key)
+                    {
+                        case Keys.Space:
+                            return inputHelper.IsNewPress(key) ? Moves.Fire : Moves.None;
+                        case Keys.Left:
+                            return Moves.Left;
+                        case Keys.Right:
+                            return Moves.Right;
+                        case Keys.Down:
+                            return Moves.Down;
+                        case Keys.Up:
+                            return Moves.Up;
 
-                    // game menu
-                    case Keys.Escape:
-                        return Moves.Pause;
+                        // game menu
+                        case Keys.Escape:
+                            return Moves.Pause;
+                    }
+                }
+                else
+                {
+                    //WSAD
+                    switch (key)
+                    {
+                        case Keys.Space:
+                            return inputHelper.IsNewPress(key) ? Moves.Fire : Moves.None;
+                        case Keys.A:
+                            return Moves.Left;
+                        case Keys.D:
+                            return Moves.Right;
+                        case Keys.S:
+                            return Moves.Down;
+                        case Keys.W:
+                            return Moves.Up;
+
+                        // game menu
+                        case Keys.Escape:
+                            return Moves.Pause;
+                    }
                 }
             }
             else if (inputHelper.IsNewPress(key))
@@ -217,11 +252,8 @@ namespace Bomberman
             }
             return Moves.None;
         }
-    }
 
-    //IGame interface implementation
-    public partial class BombermanGame : Microsoft.Xna.Framework.Game, IGame
-    {
+        #region IGame implementation
         public void NewGame()
         {
             this.IsGameRunning = true;
@@ -235,9 +267,9 @@ namespace Bomberman
             FileManager.SaveGameFile(gameState, "Alek");
         }
 
-        public void LoadGame()
+        public void LoadGame(string filename)
         {
-            var gameState = FileManager.LoadGameFile("Alek");
+            var gameState = FileManager.LoadGameFile("Alek", filename);
             _GameManager.LoadGame(gameState);
             IsGameRunning = true;
             this._GameManager.LoadContent(this.Content);
@@ -250,7 +282,8 @@ namespace Bomberman
 
         public string[] GetSavedGames()
         {
-            throw new NotImplementedException();
+            var saves = FileManager.GetSavedGames("Alek");
+            return saves;
         }
 
         public string[][] LoadMapFile(string mapName)
@@ -261,14 +294,26 @@ namespace Bomberman
 
         public Tuple<string, int>[] GetHighScores()
         {
-            throw new NotImplementedException();
+            var highScores = FileManager.GetHighScores();
+            return highScores;
         }
 
-        public void ToggleOption(OptionType option)
+        public void UpdateHighScores(string playerName, int score)
         {
-            throw new NotImplementedException();
+            FileManager.AddHighScore(playerName, score);
         }
 
+        public string ToggleOption(OptionType option)
+        {
+            var result = this._settings.Toggle(option);
+            return result;
+        }
+
+
+        public string GetOptionValue(OptionType option)
+        {
+            return this._settings.GetOptionValue(option); ;
+        }
         public void Login(string nickname)
         {
             throw new NotImplementedException();
@@ -278,5 +323,7 @@ namespace Bomberman
         {
             this.Exit();
         }
+        #endregion
+
     }
 }

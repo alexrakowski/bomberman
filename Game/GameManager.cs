@@ -15,26 +15,31 @@ using Bomberman.Game.Movable.Enemies;
 
 namespace Bomberman.Game
 {
-    partial class GameManager : IDrawable
+    partial class GameManager : IDrawable, ICollector
     {
-        public const int RESPAWN_SHIELD_TIME = 4;
+        #region Fields
+        public const int RESPAWN_SHIELD_TIME_SECS = 4;
 
         private Map.Map _map;
         private List<Enemy> _enemies;
-        private Movable.Adventurer _adventurer;
-        private List<Items.Bomb> _bombs;
+        private Adventurer _adventurer;
+        private List<Bomb> _bombs;
         private List<Modifier> _modifiers;
 
-        public GameInfo _gameInfo;
+        private GameInfo _gameInfo;
         private GamePanel _gamePanel;
+        private List<ModifierDisplay> _modifierDisplays;
 
-        public bool HasPlayerLost { get; set; }
+        public bool HasPlayerLost { get; protected set; }
+        public bool HasPlayerWon { get; protected set; }
+        #endregion
 
+        #region Game Management
         public void Update(int elapsedTime, Moves move)
         {
             if (_gameInfo.ElapseTime(elapsedTime))
             {
-                throw new NotImplementedException();
+                this.HasPlayerLost = true;
             }
             //move movables
             _adventurer.Move(elapsedTime, move);
@@ -44,7 +49,7 @@ namespace Bomberman.Game
                 collectable.Collect(this);
             }
 
-            foreach (var enemy in _enemies)
+            foreach (var enemy in _enemies.Where(e => !e.IsParalyzed))
                 enemy.Move(elapsedTime);
             //items
             UpdateModifiers(elapsedTime);
@@ -57,6 +62,14 @@ namespace Bomberman.Game
             foreach (var modifier in _modifiers)
             {
                 modifier.Update(elapsedTime, _gameInfo, _enemies, _adventurer);
+            }
+            if (_modifierDisplays != null)
+            {
+                foreach (var display in _modifierDisplays)
+                {
+                    display.Update(elapsedTime);
+                }
+                _modifierDisplays.RemoveAll(d => d.IsFinished);
             }
         }
         private void UpdateBombs(int elapsedTime)
@@ -93,23 +106,29 @@ namespace Bomberman.Game
                 var square = _map.GetStartSquare();
                 _adventurer.PutOnAnotherSquare(square);
                 _adventurer.MakeAlive();
+
+                var modifiersEndingOnDeath = _modifiers.Where(m => m.EndsOnPlayerDeath);
+                foreach (var m in modifiersEndingOnDeath)
+                    m.EndNow(_gameInfo, _enemies, _adventurer);
+
                 AddRespawnShield();
             }
         }
         private void AddRespawnShield()
         {
-            var indestructibleModifier = new Indestructible(RESPAWN_SHIELD_TIME);
+            var indestructibleModifier = new Indestructible(RESPAWN_SHIELD_TIME_SECS);
             _modifiers.Add(indestructibleModifier);
             indestructibleModifier.Apply(_gameInfo, _enemies, _adventurer);
         }
-    }
-    partial class GameManager : ICollector
-    {
+        #endregion
+
+        #region ICollector
         public void AddMapFragment()
         {
             if (_gameInfo.AddMapFragment())
             {
                 // found all map fragments
+                OnLevelWon();
                 StartNextLevel();
             }
         }
@@ -121,29 +140,28 @@ namespace Bomberman.Game
                 _modifiers = new List<Modifier>();
             }
             _modifiers.Add(modifier);
+            AddModifierDisplay(new ModifierDisplay(modifier));
         }
-    }
-    partial class GameManager
-    {
-        private IGame _iGame;
-        private GameManager(IGame iGame) { this._iGame = iGame; _gamePanel = GamePanel.GetInstance(); }
-        private static GameManager instance;
-        public static GameManager GetInstance(IGame iGame)
+        private void AddModifierDisplay(ModifierDisplay display)
         {
-            if (instance == null)
+            if (_modifierDisplays == null)
             {
-                return instance = new GameManager(iGame);
+                _modifierDisplays = new List<ModifierDisplay>();
             }
-            else
-            {
-                return instance;
-            }
+            _modifierDisplays.Add(display);
         }
-    }
-    partial class GameManager
-    {
+        #endregion
+
+        #region Levels' management
+        private void ResetWonLost()
+        {
+            HasPlayerLost = false;
+            HasPlayerWon = false;
+        }
         public void NewGame(string playerName)
         {
+            ResetWonLost();
+
             var level = GameLevels.First; 
             _gameInfo = null;
 
@@ -151,6 +169,8 @@ namespace Bomberman.Game
         }
         public void LoadGame(object gameStateObj)
         {
+            ResetWonLost();
+
             GameState gameState;
             try
             {
@@ -171,7 +191,7 @@ namespace Bomberman.Game
 
             _map = LoadMap(level);
 
-            LevelFactory.CreateLevel(level, _map, ref _gameInfo, out _enemies);
+            LevelFactory.CreateLevel(level, _map, ref _gameInfo, out _enemies, _bombs);
             _adventurer = Game.Movable.Adventurer.GetNewInstance(_map, _bombs);
         }
         public GameState GetGameState()
@@ -185,10 +205,39 @@ namespace Bomberman.Game
             if (_gameInfo.Level == GameLevels.Third)
             {
                 // somebody has won the game, nice!
-                throw new NotImplementedException();
+                OnGameWon();
+                return;
             }
+            Bomb.ResetRange();
             _gameInfo.NextLevel();
             StartLevel(_gameInfo.Level);
+        }
+        private void OnLevelWon()
+        {
+            // calculate points for time left
+            int pointsForTime = (int)_gameInfo.Time;
+            int timeForLevel = LevelFactory.GetTimeForLevel(_gameInfo.Level);
+
+            double timePercentage = _gameInfo.Time / timeForLevel;
+            if (timePercentage < 0.25)
+            {
+                pointsForTime *= 10;
+            }
+            else if (timePercentage < 0.5)
+            {
+                pointsForTime *= 20;
+            }
+            else
+            {
+                pointsForTime *= 50;
+            }
+
+            _gameInfo.AddPoints(pointsForTime);
+        }
+        private void OnGameWon()
+        {
+            this.HasPlayerWon = true;
+            this._iGame.UpdateHighScores(_gameInfo.PlayerName, _gameInfo.Score);
         }
         private GameState ConstructGameState()
         {
@@ -210,11 +259,26 @@ namespace Bomberman.Game
 
             return map;
         }
-        
-    }
-    //drawing
-    partial class GameManager
-    {
+        #endregion
+
+        #region Singleton implementation
+        private IGame _iGame;
+        private GameManager(IGame iGame) { this._iGame = iGame; _gamePanel = GamePanel.GetInstance(); }
+        private static GameManager instance;
+        public static GameManager GetInstance(IGame iGame)
+        {
+            if (instance == null)
+            {
+                return instance = new GameManager(iGame);
+            }
+            else
+            {
+                return instance;
+            }
+        }
+        #endregion
+
+        #region Drawing
         public void Draw(SpriteBatch spriteBatch)
         {
             _gamePanel.Draw(spriteBatch, _gameInfo);
@@ -226,6 +290,15 @@ namespace Bomberman.Game
                 enemy.Draw(spriteBatch);
             foreach (var bomb in _bombs)
                 bomb.Draw(spriteBatch);
+
+            //ModifierDisplays
+            if (_modifierDisplays != null)
+            {
+                foreach (var display in _modifierDisplays)
+                {
+                    display.Draw(spriteBatch);
+                }
+            }
         }
 
         public void LoadContent(ContentManager content)
@@ -245,6 +318,8 @@ namespace Bomberman.Game
             Bomb.LoadClassContent(content);
             MapFragment.LoadClassContent(content);
             Bonus.LoadClassContent(content);
+            ModifierDisplay.LoadClassContent(content);
         }
+        #endregion
     }
 }

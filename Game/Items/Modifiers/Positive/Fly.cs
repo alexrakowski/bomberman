@@ -5,13 +5,13 @@ using System.Text;
 using Bomberman.Game.Movable.Enemies;
 using Microsoft.Xna.Framework;
 
-namespace Bomberman.Game.Items.Modifiers.PositiveModifiers
+namespace Bomberman.Game.Items.Modifiers.Positive
 {
-    class NewLife : Modifier
+    class Fly : Modifier
     {
         protected override void OnApply(GameInfo gameInfo, List<Enemy> enemies, Movable.Adventurer adventurer)
         {
-            gameInfo.AddLife();
+            adventurer.MakeFlying();
         }
 
         protected override void OnTimeEnded(GameInfo gameInfo, List<Enemy> enemies, Movable.Adventurer adventurer)
@@ -22,6 +22,11 @@ namespace Bomberman.Game.Items.Modifiers.PositiveModifiers
         protected override void SetTime()
         {
             Time = 0;
+        }
+
+        public override bool EndsOnPlayerDeath
+        {
+            get { return true; }
         }
     }
 }

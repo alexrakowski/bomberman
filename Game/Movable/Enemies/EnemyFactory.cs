@@ -11,21 +11,20 @@ namespace Bomberman.Game.Movable.Enemies
     {
         public static Enemy Construct(IXmlSerializable info, Map.Map map)
         {
-            Enemy enemy = null;
             var enemyInfo = (EnemyInfo)info;
             var startSquare = map.GetSquare(enemyInfo.X, enemyInfo.Y);
 
             switch (enemyInfo.Type)
             {
                 case "Wolf":
-                    enemy = new Wolf(map, startSquare);
-                    break;
+                    return new Wolf(map, startSquare);
                 case "Owl":
-                    enemy = new Owl(map, startSquare);
-                    break;
+                    return new Owl(map, startSquare);
+                case "Fox":
+                    return new Fox(map, startSquare);
+                default:
+                    throw new BombermanException("Unknown Enemy type: " + enemyInfo.Type);
             }
-
-            return enemy;
         }
     }
 }
