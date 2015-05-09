@@ -13,17 +13,17 @@ namespace Bomberman.Game
 {
     static class LevelFactory
     {
-        public static void CreateLevel(GameLevels level, Map.Map map, ref GameInfo gameInfo, out List<Enemy> enemies, List<Bomb> bombs)
+        public static void CreateLevel(GameLevels level, string playerName, Map.Map map, ref GameInfo gameInfo, out List<Enemy> enemies, List<Bomb> bombs)
         {
             int mapFragmentsToFind = GetMapFragmentsToFind(level);
             int time = GetTimeForLevel(level);
             if (gameInfo == null)
             {
-                gameInfo = new Game.GameInfo("Alek", mapFragmentsToFind, level, time);
+                gameInfo = new Game.GameInfo(playerName, mapFragmentsToFind, level, time);
             }
             else
             {
-                var newInfo = new GameInfo("Alek", mapFragmentsToFind, level, time, gameInfo.Score, gameInfo.Lifes);
+                var newInfo = new GameInfo(playerName, mapFragmentsToFind, level, time, gameInfo.Score, gameInfo.Lifes);
                 gameInfo = newInfo;
             }
             enemies = GetEnemies(level, map, bombs);

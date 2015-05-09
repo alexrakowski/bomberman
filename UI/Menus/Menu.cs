@@ -21,7 +21,8 @@ namespace Bomberman.UI.Menus
             //Draw the title
             Color fontColor = Color.Black;
             Vector2 fontPos = new Vector2(100, 100);
-            Vector2 FontOrigin = spriteFont.MeasureString(this.Title) / 2;
+            Vector2 FontOrigin = spriteFont.MeasureString(this.Title);
+            FontOrigin.X -= GameConstants.DisplayWidth / 2;
 
             spriteBatch.DrawString(spriteFont, this.Title, fontPos, fontColor,
                           0, FontOrigin, 1.0f, SpriteEffects.None, 0.5f);
@@ -52,6 +53,10 @@ namespace Bomberman.UI.Menus
             }
             return null;
         }
+        public void Update(char input, bool delete)
+        {
+            ProcessInput(input, delete);
+        }
         /// <summary>
         /// Performs action corresponding to the currently selected option, i.e. disable sound,
         /// launch new game, show another menu etc.
@@ -61,6 +66,7 @@ namespace Bomberman.UI.Menus
         /// Otherwise, null
         /// </returns>
         protected abstract Menu MakeAction();
+        protected abstract void ProcessInput(char input, bool delete = false);
 
         public Menu(IGame iGame, Menu parentMenu) : this(iGame)
         {

@@ -5,34 +5,29 @@ using System.Text;
 using Bomberman.Game.Movable.Enemies;
 using Microsoft.Xna.Framework;
 
-namespace Bomberman.Game.Items.Modifiers.Positive
+namespace Bomberman.Game.Items.Modifiers.Negative
 {
-    class ParalyzeEnemies : Modifier
+    class LessBombs : Modifier
     {
         protected override void OnApply(GameInfo gameInfo, List<Enemy> enemies, Movable.Adventurer adventurer)
         {
-            foreach (var enemy in enemies)
-            {
-                enemy.Paralyze();
-            }
+            if (adventurer.BombsLimit > 1)
+                adventurer.BombsLimit--;
         }
 
         protected override void OnTimeEnded(GameInfo gameInfo, List<Enemy> enemies, Movable.Adventurer adventurer)
         {
-            foreach (var enemy in enemies)
-            {
-                enemy.UnParalyze();
-            }
         }
 
         protected override void SetTime()
         {
-            Time = 150;
+            Time = 0;
         }
+        public LessBombs() : base() { }
 
         public override bool EndsOnPlayerDeath
         {
-            get { return true; }
+            get { return false; }
         }
     }
 }

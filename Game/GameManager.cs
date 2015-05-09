@@ -18,7 +18,7 @@ namespace Bomberman.Game
     partial class GameManager : IDrawable, ICollector
     {
         #region Fields
-        public const int RESPAWN_SHIELD_TIME_SECS = 4;
+        public const int RESPAWN_SHIELD_TIME_MILISECS = 50;
 
         private Map.Map _map;
         private List<Enemy> _enemies;
@@ -116,7 +116,7 @@ namespace Bomberman.Game
         }
         private void AddRespawnShield()
         {
-            var indestructibleModifier = new Indestructible(RESPAWN_SHIELD_TIME_SECS);
+            var indestructibleModifier = new Items.Modifiers.Positive.Indestructible(RESPAWN_SHIELD_TIME_MILISECS);
             _modifiers.Add(indestructibleModifier);
             indestructibleModifier.Apply(_gameInfo, _enemies, _adventurer);
         }
@@ -165,7 +165,7 @@ namespace Bomberman.Game
             var level = GameLevels.First; 
             _gameInfo = null;
 
-            StartLevel(level);
+            StartLevel(level, playerName);
         }
         public void LoadGame(object gameStateObj)
         {
@@ -184,14 +184,14 @@ namespace Bomberman.Game
             LevelFactory.LoadLevel(gameState, out _gameInfo, out _map, out _adventurer, out _enemies, out _bombs, out _modifiers);
         }
 
-        private void StartLevel(GameLevels level)
+        private void StartLevel(GameLevels level, string playerName)
         {
             _modifiers = new List<Modifier>();
             _bombs = new List<Items.Bomb>();
 
             _map = LoadMap(level);
 
-            LevelFactory.CreateLevel(level, _map, ref _gameInfo, out _enemies, _bombs);
+            LevelFactory.CreateLevel(level, playerName, _map, ref _gameInfo, out _enemies, _bombs);
             _adventurer = Game.Movable.Adventurer.GetNewInstance(_map, _bombs);
         }
         public GameState GetGameState()
@@ -210,7 +210,7 @@ namespace Bomberman.Game
             }
             Bomb.ResetRange();
             _gameInfo.NextLevel();
-            StartLevel(_gameInfo.Level);
+            StartLevel(_gameInfo.Level, _gameInfo.PlayerName);
         }
         private void OnLevelWon()
         {
@@ -311,6 +311,8 @@ namespace Bomberman.Game
             foreach (var enemy in _enemies)
                 enemy.LoadContent(content);
             Fox.LoadClassContent(content);
+            Bear.LoadClassContent(content);
+            
             LoadItemsContent(content);
         }
         private void LoadItemsContent(ContentManager content)

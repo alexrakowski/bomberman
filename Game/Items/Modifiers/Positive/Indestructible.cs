@@ -5,10 +5,11 @@ using System.Text;
 using Bomberman.Game.Movable.Enemies;
 using Microsoft.Xna.Framework;
 
-namespace Bomberman.Game.Items.Modifiers
+namespace Bomberman.Game.Items.Modifiers.Positive
 {
     class Indestructible : Modifier
     {
+        private int _wholeTime = 200;
         protected override void OnApply(GameInfo gameInfo, List<Enemy> enemies, Movable.Adventurer adventurer)
         {
             adventurer.IsIndestructible = true;
@@ -21,11 +22,11 @@ namespace Bomberman.Game.Items.Modifiers
 
         protected override void SetTime()
         {
-            Time = 200;
+            Time = _wholeTime;
         }
         public Indestructible(int time)
         {
-            Time = time;
+            _wholeTime = time;
         }
         public Indestructible() : base() { }
 

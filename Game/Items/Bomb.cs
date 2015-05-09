@@ -70,6 +70,11 @@ namespace Bomberman.Game.Items
         {
             RANGE++;
         }
+        public static void DecrementRange()
+        {
+            if (RANGE > 1)
+                RANGE--;
+        }
 
         public bool HasExploded { get; private set; }
         List<Vector2> AffectedPositions;

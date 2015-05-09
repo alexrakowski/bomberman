@@ -5,7 +5,7 @@ using System.Text;
 using Bomberman.Game.Movable.Enemies;
 using Microsoft.Xna.Framework;
 
-namespace Bomberman.Game.Items.Modifiers
+namespace Bomberman.Game.Items.Modifiers.Positive
 {
     class MoreBombs : Modifier
     {

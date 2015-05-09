@@ -11,7 +11,7 @@ namespace Bomberman.Utils
     {
         public static bool CheckElementsCollision(Element elem1, Element elem2)
         {
-            int radius = MapElement.WIDTH / 2;
+            int radius = GameConstants.SQUARE_RADIUS;
             return Utils.Intersection.CheckCircleIntersection(elem1.Position, elem2.Position, radius);
         }
 

@@ -34,5 +34,9 @@ namespace Bomberman.UI.Menus
             string[] positions = { "Resume", "Save Game", "Return to Main Menu" };
             this._positions = positions;
         }
+
+        protected override void ProcessInput(char input, bool delete = false)
+        {
+        }
     }
 }

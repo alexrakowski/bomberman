@@ -36,5 +36,9 @@ namespace Bomberman.UI.Menus
             saves.CopyTo(this._positions, 0);
             this._positions[saves.Length] = "Back";
         }
+
+        protected override void ProcessInput(char input, bool delete = false)
+        {
+        }
     }
 }

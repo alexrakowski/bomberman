@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using Bomberman.Game.Items.Modifiers.Positive;
+using Bomberman.Game.Items.Modifiers.Negative;
 using Bomberman.Game.Serialization;
 using Microsoft.Xna.Framework;
 
@@ -45,13 +46,29 @@ namespace Bomberman.Game.Items.Modifiers
                     return new Fly();
                 case PositiveModifiers.FartherBombsRange:
                     return new FartherBombsRange();
-            }
-            return new NewLife();
+                default:
+                    return new NewLife();
+            }            
         }
         public static Modifier GetRandomNegativeModifier()
         {
             InitRandom();
-            return GetRandomPositiveModifier();
+            int r = rand.Next() % PositivesCount;
+            NegativeModifiers m = (NegativeModifiers)r;
+
+            switch (m)
+            {
+                case NegativeModifiers.LessBombs:
+                    return new LessBombs();
+                case NegativeModifiers.LessTime:
+                    return new LessTime();
+                case NegativeModifiers.ShorterBombsRange:
+                    return new ShorterBombsRange();
+                case NegativeModifiers.SpeedDown:
+                    return new SpeedDown();
+                default:
+                    return new LessTime();
+            }  
         }
         public static Modifier Construct(IXmlSerializable info)
         {
@@ -75,6 +92,14 @@ namespace Bomberman.Game.Items.Modifiers
                     return new ParalyzeEnemies();
                 case "Fly":
                     return new Fly();
+                case "LessBombs":
+                    return new LessBombs();
+                case "LessTime":
+                    return new LessTime();
+                case "ShorterBombsRange":
+                    return new ShorterBombsRange();
+                case "SpeedDown":
+                    return new SpeedDown();
                 default:
                     throw new BombermanException("Unknown modifier type: " + modifierInfo.Type); 
             }

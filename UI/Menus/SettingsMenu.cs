@@ -55,5 +55,9 @@ namespace Bomberman.UI.Menus
                     this._positions[i] += "On";
             }
         }
+
+        protected override void ProcessInput(char input, bool delete = false)
+        {
+        }
     }
 }

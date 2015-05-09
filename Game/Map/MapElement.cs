@@ -13,8 +13,12 @@ namespace Bomberman.Game.Map
 {
     abstract class MapElement : DestroyableElement, IToInfo
     {
-        public const int WIDTH = 900 / 15; //TODO: no magic numbers!!
-        public const int HEIGHT = 900 / 15;
+        private const int SQUARES_PER_ROW = 15;
+        private const int SQUARES_PER_COLUMN = 10;
+        private const int DEFAULT_ROW_WIDTH = 900;
+        private const int DEFAULT_ROW_HEIGTH = 600;
+        public static int WIDTH = DEFAULT_ROW_WIDTH / SQUARES_PER_ROW;
+        public static int HEIGHT = DEFAULT_ROW_HEIGTH / SQUARES_PER_COLUMN;
 
         public List<DestroyableElement> OccupyingElements;
         public abstract bool IsWalkingTerrain { get; }

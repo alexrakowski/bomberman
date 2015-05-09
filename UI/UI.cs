@@ -20,8 +20,8 @@ namespace Bomberman.UI
 
         public void ShowMainMenu() 
         {
-            if (_currentMenu != null) return; //TODO: change
-            _currentMenu = new MainMenu(this._iGame);
+            if (_currentMenu == null)
+                _currentMenu = new MainMenu(this._iGame);
         }
         public void ShowLoginMenu()
         {
@@ -47,6 +47,19 @@ namespace Bomberman.UI
 
             var nextMenu = _currentMenu.Update(move);
             if (nextMenu != null) _currentMenu = nextMenu;
+        }
+        public void Update(Moves move, char input, bool delete = false)
+        {
+            if (_currentMenu == null)
+                return;
+
+            if (move != Moves.None)
+            {
+                var nextMenu = _currentMenu.Update(move);
+                if (nextMenu != null) _currentMenu = nextMenu;
+            }
+            else
+                _currentMenu.Update(input, delete);
         }
         public void LoadContent(ContentManager content)
         {

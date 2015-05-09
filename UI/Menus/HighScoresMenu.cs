@@ -43,5 +43,9 @@ namespace Bomberman.UI.Menus
 
             this._positions[highScores.Length] = "Back";
         }
+
+        protected override void ProcessInput(char input, bool delete = false)
+        {
+        }
     }
 }

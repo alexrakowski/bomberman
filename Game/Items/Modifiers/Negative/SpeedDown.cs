@@ -7,27 +7,21 @@ using Microsoft.Xna.Framework;
 
 namespace Bomberman.Game.Items.Modifiers.Positive
 {
-    class ParalyzeEnemies : Modifier
+    class SpeedDown : Modifier
     {
         protected override void OnApply(GameInfo gameInfo, List<Enemy> enemies, Movable.Adventurer adventurer)
         {
-            foreach (var enemy in enemies)
-            {
-                enemy.Paralyze();
-            }
+            adventurer.SpeedModifier /= 2;
         }
 
         protected override void OnTimeEnded(GameInfo gameInfo, List<Enemy> enemies, Movable.Adventurer adventurer)
         {
-            foreach (var enemy in enemies)
-            {
-                enemy.UnParalyze();
-            }
+            return;
         }
 
         protected override void SetTime()
         {
-            Time = 150;
+            Time = 0;
         }
 
         public override bool EndsOnPlayerDeath
