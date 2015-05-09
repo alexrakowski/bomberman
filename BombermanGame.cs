@@ -39,16 +39,16 @@ namespace Bomberman
         private OptionsSettings _settings;
         public bool IsGameRunning { get; private set; }
         public string PlayerName { get; private set; }
-        bool IsPlayerLoggedIn = true;
+        bool IsPlayerLoggedIn = false;
         #endregion
 
         #region XNAGame methods
         public BombermanGame()
         {
             graphics = new GraphicsDeviceManager(this);
-
             graphics.PreferredBackBufferWidth = 900;
             graphics.PreferredBackBufferHeight = 600;
+            GameConstants.SetDisplaySize(graphics);
 
             Content.RootDirectory = "Content";
 
@@ -108,7 +108,6 @@ namespace Bomberman
         protected override void Update(GameTime gameTime)
         {
             inputHelper.Update();
-
             var move = InputToMove(Keyboard.GetState());
 
             if (IsGameRunning)
@@ -149,12 +148,19 @@ namespace Bomberman
                     if (IsPlayerLoggedIn)
                     {
                         _UIManager.ShowMainMenu();
+                        _UIManager.Update(move);
                     }
                     else
                     {
                         _UIManager.ShowLoginMenu();
+
+                        char input;
+                        bool delete;
+                        if (InputToChar(Keyboard.GetState(), out input, out delete))
+                            _UIManager.Update(move, input, delete);
+                        else
+                            _UIManager.Update(move);
                     }
-                    _UIManager.Update(move);
                 }
                 catch (BombermanException bombermanException)
                 {
@@ -252,6 +258,29 @@ namespace Bomberman
             }
             return Moves.None;
         }
+        private bool InputToChar(KeyboardState keyboardState, out char input, out bool delete)
+        {
+            input = ' ';
+            delete = false;
+            var keys = keyboardState.GetPressedKeys();
+            if (keys.Length < 1)
+                return false;
+            var key = keys[0];
+            if (inputHelper.IsNewPress(key))
+            {
+                if (key == Keys.Back)
+                {
+                    delete = true;
+                    return true;
+                }
+                input = key.ToString()[0];
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         #region IGame implementation
         public void NewGame()
@@ -264,12 +293,12 @@ namespace Bomberman
         public void SaveGame()
         {
             var gameState = _GameManager.GetGameState();
-            FileManager.SaveGameFile(gameState, "Alek");
+            FileManager.SaveGameFile(gameState, PlayerName);
         }
 
         public void LoadGame(string filename)
         {
-            var gameState = FileManager.LoadGameFile("Alek", filename);
+            var gameState = FileManager.LoadGameFile(PlayerName, filename);
             _GameManager.LoadGame(gameState);
             IsGameRunning = true;
             this._GameManager.LoadContent(this.Content);
@@ -282,7 +311,7 @@ namespace Bomberman
 
         public string[] GetSavedGames()
         {
-            var saves = FileManager.GetSavedGames("Alek");
+            var saves = FileManager.GetSavedGames(PlayerName);
             return saves;
         }
 
@@ -316,7 +345,12 @@ namespace Bomberman
         }
         public void Login(string nickname)
         {
-            throw new NotImplementedException();
+            if (nickname.Length < 1)
+            {
+                throw new BombermanException("Name must be longer than 0");
+            }
+            PlayerName = nickname;
+            IsPlayerLoggedIn = true;
         }
 
         public void Quit()
