@@ -9,7 +9,6 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Bomberman.UI
 {
-    //TODO: Singleton
     class UIManager : IDrawable
     {
         private IGame _iGame;

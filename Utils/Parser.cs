@@ -6,8 +6,22 @@ using Microsoft.Xna.Framework;
 
 namespace Bomberman.Utils
 {
-    static class Parser
+    /// <summary>
+    /// Helper class for parsing value literals.
+    /// For deserialization purposes, etc.
+    /// </summary>
+    public static class Parser
     {
+        /// <summary>
+        /// Parses Int Tuple.
+        /// Example form: 2,2
+        /// </summary>
+        /// <param name="text">
+        /// String to parse
+        /// </param>
+        /// <returns>
+        /// Parsed int Tuple
+        /// </returns>
         public static Tuple<int, int> ParseIntTuple(string text)
         {
             int elem1, elem2;
@@ -28,6 +42,16 @@ namespace Bomberman.Utils
 
             return new Tuple<int, int>(elem1, elem2);
         }
+        /// <summary>
+        /// Parses Vector2 from string.
+        /// Example: {X:2.131 Y: 123.123}
+        /// </summary>
+        /// <param name="text">
+        /// String to parse
+        /// </param>
+        /// <returns>
+        /// Parsed Vector2
+        /// </returns>
         public static Vector2 ParseVector2(string text)
         {
             float x, y;

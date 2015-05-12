@@ -15,3 +15,7 @@ obj/x86/Debug/ContentPipeline-{E487FC49-DB88-4685-A7A7-E05907421E36}.xml
 obj/x86/Debug/Microsoft.Xna.Framework.RuntimeProfile.txt
 Program.cs
 Properties/AssemblyInfo.cs
+bin/x86/Debug/Bomberman.xml
+Bomberman.csproj.Release.cachefile
+bin/x86/Release/Bomberman.XML
+bin/x86/Release/Bomberman.dll

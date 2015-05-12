@@ -8,7 +8,7 @@ using Bomberman.Game.Map;
 
 namespace Bomberman
 {
-    abstract class Element : IDrawable
+    public abstract class Element : IDrawable
     {
         /* _position - Element's position on the screen, to enable drawing it, movement's animation etc. Real values.*/
         public Vector2 Position;

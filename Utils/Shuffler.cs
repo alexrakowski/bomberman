@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Bomberman.Utils
 {
-    static class Shuffler
+    public static class Shuffler
     {
         private static Random rand;
         private static void InitRandom()

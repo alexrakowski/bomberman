@@ -1,0 +1,429 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Bomberman</name>
+    </assembly>
+    <members>
+        <member name="M:Bomberman.Game.GameInfo.AddMapFragment">
+            <summary>
+            Increments found map fragments
+            </summary>
+            <returns>
+            True if all fragments found.
+            </returns>
+        </member>
+        <member name="M:Bomberman.Game.GameInfo.LoseLife">
+            <summary>
+            Decrements lifes left.
+            </summary>
+            <returns>
+            True if the last life was lost.</returns>
+        </member>
+        <member name="T:Bomberman.Game.Items.Bonus">
+            <summary>
+            Container class for Modifiers
+            </summary>
+        </member>
+        <member name="T:Bomberman.Game.Items.Modifiers.ModifierDisplay">
+            <summary>
+            Class for displaying information about a modifier.
+            </summary>
+        </member>
+        <member name="M:Bomberman.Game.Map.Map.MapFactory.GetBasicMap">
+            <summary>
+            For testing etc.
+            </summary>
+            <returns>
+            Map consisting only of Earth cells
+            </returns>
+        </member>
+        <member name="M:Bomberman.Game.Movable.Adventurer.GetNewInstance(Bomberman.Game.Map.Map,System.Collections.Generic.List{Bomberman.Game.Items.Bomb})">
+            <summary>
+            Creates new Adventurer instance
+            </summary>
+            <param name="map"></param>
+            <param name="bombs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Bomberman.Game.Movable.Adventurer.GetInstance">
+            <summary>
+            Returns current global instance of Adventurer class.
+            Returns null, unless GetNewInstance has been invoked earlier.
+            </summary>
+            <returns>
+            Current instance, or null if has not been created yet.
+            </returns>
+        </member>
+        <member name="T:Bomberman.IO.ILoggable">
+            <summary>
+            Interface for logging.
+            </summary>
+        </member>
+        <member name="M:Bomberman.IO.ILoggable.Log(System.String)">
+            <summary>
+            Logs a string.
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Bomberman.IO.ILoggable.Log(System.Exception)">
+            <summary>
+            Logs an exception
+            </summary>
+            <param name="exception"></param>
+        </member>
+        <member name="M:Bomberman.UI.Menus.Menu.MakeAction">
+            <summary>
+            Performs action corresponding to the currently selected option, i.e. disable sound,
+            launch new game, show another menu etc.
+            </summary>
+            <returns>
+            Instantiated Menu object, if action should show another menu.
+            Otherwise, null
+            </returns>
+        </member>
+        <member name="M:Bomberman.Program.Main(System.String[])">
+            <summary>
+            The main entry point for the application.
+            </summary>
+        </member>
+        <member name="T:Bomberman.BombermanGame">
+            <summary>
+            This is the main type for your game
+            </summary>
+        </member>
+        <member name="M:Bomberman.BombermanGame.Initialize">
+            <summary>
+            Allows the game to perform any initialization it needs to before starting to run.
+            This is where it can query for any required services and load any non-graphic
+            related content.  Calling base.Initialize will enumerate through any components
+            and initialize them as well.
+            </summary>
+        </member>
+        <member name="M:Bomberman.BombermanGame.LoadContent">
+            <summary>
+            LoadContent will be called once per game and is the place to load
+            all of your content.
+            </summary>
+        </member>
+        <member name="M:Bomberman.BombermanGame.UnloadContent">
+            <summary>
+            UnloadContent will be called once per game and is the place to unload
+            all content.
+            </summary>
+        </member>
+        <member name="M:Bomberman.BombermanGame.Update(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Allows the game to run logic such as updating the world,
+            checking for collisions, gathering input, and playing audio.
+            </summary>
+            <param name="gameTime">Provides a snapshot of timing values.</param>
+        </member>
+        <member name="M:Bomberman.BombermanGame.Draw(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            This is called when the game should draw itself.
+            </summary>
+            <param name="gameTime">Provides a snapshot of timing values.</param>
+        </member>
+        <member name="T:Bomberman.Utils.MouseButtons">
+            <summary>
+            an enum of all available mouse buttons.
+            </summary>
+        </member>
+        <member name="M:Bomberman.Utils.InputHelper.Update">
+            <summary>
+            Fetches the latest input states.
+            </summary>
+        </member>
+        <member name="M:Bomberman.Utils.InputHelper.IsNewPress(Microsoft.Xna.Framework.Input.Buttons)">
+            <summary>
+            Checks if the requested button is a new press.
+            </summary>
+            <param name="button">
+            The button to check.
+            </param>
+            <returns>
+            a bool indicating whether the selected button is being 
+            pressed in the current state but not the last state.
+            </returns>
+        </member>
+        <member name="M:Bomberman.Utils.InputHelper.IsCurPress(Microsoft.Xna.Framework.Input.Buttons)">
+            <summary>
+            Checks if the requested button is a current press.
+            </summary>
+            <param name="button">
+            the button to check.
+            </param>
+            <returns>
+            a bool indicating whether the selected button is being 
+            pressed in the current state and in the last state.
+            </returns>
+        </member>
+        <member name="M:Bomberman.Utils.InputHelper.IsOldPress(Microsoft.Xna.Framework.Input.Buttons)">
+            <summary>
+            Checks if the requested button is an old press.
+            </summary>
+            <param name="button">
+            the button to check.
+            </param>
+            <returns>
+            a bool indicating whether the selected button is not being
+            pressed in the current state and is being pressed in the last state.
+            </returns>
+        </member>
+        <member name="M:Bomberman.Utils.InputHelper.IsNewPress(Microsoft.Xna.Framework.Input.Keys)">
+            <summary>
+            Checks if the requested key is a new press.
+            </summary>
+            <param name="key">
+            the key to check.
+            </param>
+            <returns>
+            a bool that indicates whether the selected key is being 
+            pressed in the current state and not in the last state.
+            </returns>
+        </member>
+        <member name="M:Bomberman.Utils.InputHelper.IsCurPress(Microsoft.Xna.Framework.Input.Keys)">
+            <summary>
+            Checks if the requested key is a current press.
+            </summary>
+            <param name="key">
+            the key to check.
+            </param>
+            <returns>
+            a bool that indicates whether the selected key is being 
+            pressed in the current state and in the last state.
+            </returns>
+        </member>
+        <member name="M:Bomberman.Utils.InputHelper.IsOldPress(Microsoft.Xna.Framework.Input.Keys)">
+            <summary>
+            Checks if the requested button is an old press.
+            </summary>
+            <param name="key">
+            the key to check.
+            </param>
+            <returns>
+            a bool indicating whether the selectde button is not being
+            pressed in the current state and being pressed in the last state.
+            </returns>
+        </member>
+        <member name="M:Bomberman.Utils.InputHelper.IsNewPress(Bomberman.Utils.MouseButtons)">
+            <summary>
+            Checks if the requested mosue button is a new press.
+            </summary>
+            <param name="button">
+            teh mouse button to check.
+            </param>
+            <returns>
+            a bool indicating whether the selected mouse button is being
+            pressed in the current state but not in the last state.
+            </returns>
+        </member>
+        <member name="M:Bomberman.Utils.InputHelper.IsCurPress(Bomberman.Utils.MouseButtons)">
+            <summary>
+            Checks if the requested mosue button is a current press.
+            </summary>
+            <param name="button">
+            the mouse button to be checked.
+            </param>
+            <returns>
+            a bool indicating whether the selected mouse button is being 
+            pressed in the current state and in the last state.
+            </returns>
+        </member>
+        <member name="M:Bomberman.Utils.InputHelper.IsOldPress(Bomberman.Utils.MouseButtons)">
+            <summary>
+            Checks if the requested mosue button is an old press.
+            </summary>
+            <param name="button">
+            the mouse button to check.
+            </param>
+            <returns>
+            a bool indicating whether the selected mouse button is not being 
+            pressed in the current state and is being pressed in the old state.
+            </returns>
+        </member>
+        <member name="P:Bomberman.Utils.InputHelper.LastGamepadState">
+            <summary>
+            The previous state of the gamepad. 
+            Exposed only for convenience.
+            </summary>
+        </member>
+        <member name="P:Bomberman.Utils.InputHelper.CurrentGamepadState">
+            <summary>
+            the current state of the gamepad.
+            Exposed only for convenience.
+            </summary>
+        </member>
+        <member name="P:Bomberman.Utils.InputHelper.Index">
+            <summary>
+            the index that is used to poll the gamepad. 
+            </summary>
+        </member>
+        <member name="P:Bomberman.Utils.InputHelper.LastKeyboardState">
+            <summary>
+            The previous keyboard state.
+            Exposed only for convenience.
+            </summary>
+        </member>
+        <member name="P:Bomberman.Utils.InputHelper.CurrentKeyboardState">
+            <summary>
+            The current state of the keyboard.
+            Exposed only for convenience.
+            </summary>
+        </member>
+        <member name="P:Bomberman.Utils.InputHelper.LastMouseState">
+            <summary>
+            The previous mouse state.
+            Exposed only for convenience.
+            </summary>
+        </member>
+        <member name="P:Bomberman.Utils.InputHelper.CurrentMouseState">
+            <summary>
+            The current state of the mouse.
+            Exposed only for convenience.
+            </summary>
+        </member>
+        <member name="P:Bomberman.Utils.InputHelper.LeftStickPosition">
+            <summary>
+            The current position of the left stick. 
+            Y is automatically reversed for you.
+            </summary>
+        </member>
+        <member name="P:Bomberman.Utils.InputHelper.RightStickPosition">
+            <summary>
+            The current position of the right stick.
+            Y is automatically reversed for you.
+            </summary>
+        </member>
+        <member name="P:Bomberman.Utils.InputHelper.LeftStickVelocity">
+            <summary>
+            The current velocity of the left stick.
+            Y is automatically reversed for you.
+            expressed as: 
+            current stick position - last stick position.
+            </summary>
+        </member>
+        <member name="P:Bomberman.Utils.InputHelper.RightStickVelocity">
+            <summary>
+            The current velocity of the right stick.
+            Y is automatically reversed for you.
+            expressed as: 
+            current stick position - last stick position.
+            </summary>
+        </member>
+        <member name="P:Bomberman.Utils.InputHelper.LeftTriggerPosition">
+            <summary>
+            the current position of the left trigger.
+            </summary>
+        </member>
+        <member name="P:Bomberman.Utils.InputHelper.RightTriggerPosition">
+            <summary>
+            the current position of the right trigger.
+            </summary>
+        </member>
+        <member name="P:Bomberman.Utils.InputHelper.LeftTriggerVelocity">
+            <summary>
+            the velocity of the left trigger.
+            expressed as: 
+            current trigger position - last trigger position.
+            </summary>
+        </member>
+        <member name="P:Bomberman.Utils.InputHelper.RightTriggerVelocity">
+            <summary>
+            the velocity of the right trigger.
+            expressed as: 
+            current trigger position - last trigger position.
+            </summary>
+        </member>
+        <member name="P:Bomberman.Utils.InputHelper.MousePosition">
+            <summary>
+            the current mouse position.
+            </summary>
+        </member>
+        <member name="P:Bomberman.Utils.InputHelper.MouseVelocity">
+            <summary>
+            the current mouse velocity.
+            Expressed as: 
+            current mouse position - last mouse position.
+            </summary>
+        </member>
+        <member name="P:Bomberman.Utils.InputHelper.MouseScrollWheelPosition">
+            <summary>
+            the current mouse scroll wheel position.
+            See the Mouse's ScrollWheel property for details.
+            </summary>
+        </member>
+        <member name="P:Bomberman.Utils.InputHelper.MouseScrollWheelVelocity">
+            <summary>
+            the mouse scroll wheel velocity.
+            Expressed as:
+            current scroll wheel position - 
+            the last scroll wheel position.
+            </summary>
+        </member>
+        <member name="P:Bomberman.Utils.InputHelper.ExitRequested">
+            <summary>
+            Used for debug purposes.
+            Indicates if the user wants to exit immediately.
+            </summary>
+        </member>
+        <member name="T:Bomberman.Utils.Intersection">
+            <summary>
+            Class for elements intersection checking
+            </summary>
+        </member>
+        <member name="M:Bomberman.Utils.Intersection.CheckElementsCollision(Bomberman.Element,Bomberman.Element)">
+            <summary>
+            Checks collision of two elements using Circle Intersection.
+            The radius of the circle that is used is of a circle bounded into a game square - 
+            half of the sqaure's width.
+            </summary>
+            <param name="elem1">First element to check</param>
+            <param name="elem2">Second element to check</param>
+            <returns>
+            True if elements collide.
+            </returns>
+        </member>
+        <member name="M:Bomberman.Utils.Intersection.CheckCircleIntersection(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Int32)">
+            <summary>
+            Checks intersection of two circles with the same radius.
+            </summary>
+            <param name="pos1">Center of first circle</param>
+            <param name="pos2">Center of second circle</param>
+            <param name="radius">Radius of both circles</param>
+            <returns>
+            True if circles collide.
+            </returns>
+        </member>
+        <member name="T:Bomberman.Utils.Parser">
+            <summary>
+            Helper class for parsing value literals.
+            For deserialization purposes, etc.
+            </summary>
+        </member>
+        <member name="M:Bomberman.Utils.Parser.ParseIntTuple(System.String)">
+            <summary>
+            Parses Int Tuple.
+            Example form: 2,2
+            </summary>
+            <param name="text">
+            String to parse
+            </param>
+            <returns>
+            Parsed int Tuple
+            </returns>
+        </member>
+        <member name="M:Bomberman.Utils.Parser.ParseVector2(System.String)">
+            <summary>
+            Parses Vector2 from string.
+            Example: {X:2.131 Y: 123.123}
+            </summary>
+            <param name="text">
+            String to parse
+            </param>
+            <returns>
+            Parsed Vector2
+            </returns>
+        </member>
+    </members>
+</doc>
