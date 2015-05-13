@@ -19,3 +19,11 @@ bin/x86/Debug/Bomberman.xml
 Bomberman.csproj.Release.cachefile
 bin/x86/Release/Bomberman.XML
 bin/x86/Release/Bomberman.dll
+obj/x86/Release/Bomberman.csproj.FileListAbsolute.txt
+obj/x86/Release/Bomberman.dll
+obj/x86/Release/cachefile-{E487FC49-DB88-4685-A7A7-E05907421E36}-targetpath.txt
+obj/x86/Release/Microsoft.Xna.Framework.RuntimeProfile.txt
+docs/sandcastle/bomberman.shfbproj
+docs/sandcastle/Help/LastBuild.log
+docs/sandcastle/Help/Documentation.chw
+obj/x86/Release/ContentPipeline-{E487FC49-DB88-4685-A7A7-E05907421E36}.xml

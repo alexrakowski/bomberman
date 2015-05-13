@@ -10,7 +10,7 @@ namespace Bomberman.Game.Movable
 {
     
 
-    abstract partial class MovableElement : DestroyableElement, IMovable
+    public abstract class MovableElement : DestroyableElement, IMovable
     {
         public float InitialSpeed { get; set; }
         public float Speed { get { return (float)(InitialSpeed * SpeedModifier); } }
@@ -156,7 +156,9 @@ namespace Bomberman.Game.Movable
         {
             var prevSquare = _map.GetSquare(X, Y);
             prevSquare.Leave(this);
-            PutOnSquare(square);
+            this.Position = square.Position;
+            this.X = square.X;
+            this.Y = square.Y;
             square.Occupy(this);
             this.StopMove();
         }

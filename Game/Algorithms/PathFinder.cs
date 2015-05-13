@@ -8,7 +8,7 @@ namespace Bomberman.Game.Algorithms
 {
     static class PathFinder
     {
-        public static Moves GetMoveToAdventuer(Map.Map map, MovableElement movableFrom, MovableElement movableTo)
+        public static Moves GetMoveTo(Map.Map map, MovableElement movableFrom, MovableElement movableTo)
         {
             var g = map.ToGraph(movableFrom);
             int from = map.GetSquareIndex(movableFrom.X, movableFrom.Y);

@@ -10,18 +10,54 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Bomberman.Game
 {
-    public partial class GameInfo : IXmlSerializable
+    /// <summary>
+    /// This class has two main purposes:
+    /// It holds neccessary information about the game's state,
+    /// such as player's score, time left, etc.
+    /// Apart from that,it is used as a container for all deserialized object when saving the game.
+    /// </summary>
+    public class GameInfo : IXmlSerializable
     {
-        public int Score;
-        public double Time;
-        public int Lifes;
-        public string PlayerName;
-        public GameLevels Level;
+        /// <summary>
+        /// Player's Score.
+        /// </summary>
+        public int Score { get; private set; }
+        /// <summary>
+        /// Time left.
+        /// </summary>
+        public double Time { get; set; }
+        /// <summary>
+        /// Lifes left.
+        /// </summary>
+        public int Lifes { get; private set; }
+        /// <summary>
+        /// Player's name.
+        /// </summary>
+        public string PlayerName { get; private set; }
+        /// <summary>
+        /// Current level of the game.
+        /// </summary>
+        public GameLevels Level { get; private set; }
 
         int [] mapFragmentsFound;
-        public int foundFragments { get { return mapFragmentsFound[0]; } private set { return; } }
-        public int fragmentsToFind { get { return mapFragmentsFound[1]; } private set { return; } }
+        /// <summary>
+        /// The number of map fragments that have been found by the player.
+        /// </summary>
+        public int FoundFragments { get { return mapFragmentsFound[0]; } private set { return; } }
+        /// <summary>
+        /// The overall number of map fragments the player has to find in order to finish the level.
+        /// </summary>
+        public int FragmentsToFind { get { return mapFragmentsFound[1]; } private set { return; } }
 
+        /// <summary>
+        /// Basic constructor.
+        /// Use this to start a new game.
+        /// It will initialize neccessary fields with their starting values.
+        /// </summary>
+        /// <param name="playerName">Player's name</param>
+        /// <param name="fragmentsToFind">Number of map fragments to find</param>
+        /// <param name="level">Game level</param>
+        /// <param name="time">Time left</param>
         public GameInfo(string playerName, int fragmentsToFind, GameLevels level, double time)
         {
             Score = 0;
@@ -31,7 +67,16 @@ namespace Bomberman.Game
  
             mapFragmentsFound = new int[2] { 0, fragmentsToFind };
         }
-                                                                                  
+        /// <summary>
+        /// Use this constructor when you are loading the game,
+        /// and want to provide another number of lifes left, and score.
+        /// </summary>
+        /// <param name="playerName">Player's name</param>
+        /// <param name="fragmentsToFind">Number of map fragments to find</param>
+        /// <param name="level">Game level</param>
+        /// <param name="time">Time left</param>
+        /// <param name="score">Player's score</param>
+        /// <param name="lifes">Lifes left</param>                                                   
         public GameInfo(string playerName, int fragmentsToFind, GameLevels level, double time, int score, int lifes)
         {
             Score = score;
@@ -97,25 +142,49 @@ namespace Bomberman.Game
             return Lifes < 1;
         }
 
+        /// <summary>
+        /// Increments number of player's lifes.
+        /// </summary>
         public void AddLife()
         {
             this.Lifes++;
         }
 
+        /// <summary>
+        /// Increments player's score.
+        /// </summary>
+        /// <param name="pointsToAdd">
+        /// Amount of points to increment the score.
+        /// </param>
         public void AddPoints(int pointsToAdd)
         {
             this.Score += pointsToAdd;
         }
 
+        /// <summary>
+        /// Decrements the time that is left in the game.
+        /// </summary>
+        /// <param name="elapsedTime">
+        /// Amount of time that has passed.</param>
+        /// <returns>
+        /// True, if there is no time left.
+        /// </returns>
         public bool ElapseTime(int elapsedTime)
         {
             this.Time -= (double)elapsedTime / 1000;
             return this.Time < 1;
         }
 
+        /// <summary>
+        /// Sets the current level to the next value.
+        /// </summary>
         public void NextLevel()
         {
             this.Level = (GameLevels)((int)Level + 1);
+            if (this.Level == null)
+            {
+                throw new BombermanException("Unknown level number");
+            }
         }
         #endregion
     }

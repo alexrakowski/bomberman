@@ -83,7 +83,7 @@ namespace Bomberman.Game
                 case InfoTypes.Score:
                     return gameInfo.Score.ToString();
                 case InfoTypes.Maps:
-                    return gameInfo.foundFragments.ToString() + "/" + gameInfo.fragmentsToFind.ToString();
+                    return gameInfo.FoundFragments.ToString() + "/" + gameInfo.FragmentsToFind.ToString();
                 case InfoTypes.Lifes:
                     return gameInfo.Lifes.ToString();
                 case InfoTypes.Time:

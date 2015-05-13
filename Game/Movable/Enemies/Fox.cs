@@ -31,7 +31,7 @@ namespace Bomberman.Game.Movable.Enemies
             }
             else
             {
-                Moves move = PathFinder.GetMoveToAdventuer(_map, this, adventurer);
+                Moves move = PathFinder.GetMoveTo(_map, this, adventurer);
                 if (move == Moves.None)
                 {
                     return GetRandomMove();

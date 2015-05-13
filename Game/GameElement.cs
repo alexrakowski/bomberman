@@ -10,19 +10,24 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Bomberman.Game
 {
     
-
-    abstract class GameElement : Element, IPlaysSound, IToInfo
+    /// <summary>
+    /// Abstract class representing an element that will be on a square of the game,
+    /// thus having discrete X,Y coordinates.
+    /// </summary>
+    public abstract class GameElement : Element, IPlaysSound, IToInfo
     {
-        /* X, Y - indexes of the square occupied by the Element. Discrete values.*/
+        /// <summary>
+        /// X index of the square occupied by the Element. Discrete value.
+        /// </summary>
         public int X;
+        /// <summary>
+        /// Y index of the square occupied by the Element. Discrete value.
+        /// </summary>
         public int Y;
 
-        public void PutOnSquare(Map.MapElement square)
-        {
-            this.Position = square.Position;
-            this.X = square.X;
-            this.Y = square.Y;
-        }
+        /// <summary>
+        /// IPlaysSound implementation
+        /// </summary>
         public void PlaySound() { throw new NotImplementedException(); }
 
         public abstract IXmlSerializable ToInfo();

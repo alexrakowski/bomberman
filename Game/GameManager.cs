@@ -15,7 +15,7 @@ using Bomberman.Game.Movable.Enemies;
 
 namespace Bomberman.Game
 {
-    partial class GameManager : IDrawable, ICollector
+    class GameManager : IDrawable, ICollector
     {
         #region Fields
         public const int RESPAWN_SHIELD_TIME_MILISECS = 50;

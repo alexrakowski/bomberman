@@ -8,12 +8,27 @@ using System.Xml.Serialization;
 
 namespace Bomberman.IO
 {
-    static class FileManager
+    /// <summary>
+    /// Manager for Input Output File operations.
+    /// Enables game saving/loading, Highscores adding/loading.
+    /// Manages map files.
+    /// </summary>
+    public static class FileManager
     {
         const string FILES_PREF = "../../../../Files";
 
         #region Maps
         const string MAPS_PATH = FILES_PREF + "/Maps/";
+        /// <summary>
+        /// Loads file containing map represantation.
+        /// </summary>
+        /// <param name="mapName">
+        /// Name of the map to load, without the file extension.
+        /// Eg. "1" to load "1.csv".
+        /// </param>
+        /// <returns>
+        /// Array of string arrays containing values for each map cell.
+        /// </returns>
         public static string[][] LoadMapFile(string mapName)
         {
             string mapPath = MAPS_PATH + mapName + ".csv";
@@ -39,6 +54,15 @@ namespace Bomberman.IO
         #region Save/Load Games
         const string SAVES_PATH = FILES_PREF + "/Saves/";
         const string SAVED_GAMES_EXT = ".sav";
+        /// <summary>
+        /// Saves current game state.
+        /// </summary>
+        /// <param name="gameInfo">
+        /// IXmlSerializable object, representing the game's state.
+        /// </param>
+        /// <param name="playerName">
+        /// Name of the player.
+        /// </param>
         public static void SaveGameFile(IXmlSerializable gameInfo, string playerName)
         {
             string dirPath = SAVES_PATH + playerName;
@@ -55,6 +79,14 @@ namespace Bomberman.IO
 
             WriteXmlSerializable(gameInfo, savePath);
         }
+        /// <summary>
+        /// Loads game from file.
+        /// </summary>
+        /// <param name="playerName">
+        /// Player's name</param>
+        /// <param name="filename">
+        /// Name of the save to load (with extension).</param>
+        /// <returns></returns>
         public static Object LoadGameFile(string playerName, string filename)
         {
             string dirPath = SAVES_PATH + playerName + "/";
@@ -69,6 +101,14 @@ namespace Bomberman.IO
 
             return result;
         }
+        /// <summary>
+        /// Loads saved games for the given player.
+        /// </summary>
+        /// <param name="playerName">
+        /// Player's name</param>
+        /// <returns>
+        /// Array of Saves' filenames.
+        /// </returns>
         public static string[] GetSavedGames(string playerName)
         {
             string dirPath = SAVES_PATH + playerName + "/";
@@ -123,6 +163,12 @@ namespace Bomberman.IO
         const char HIGH_SCORES_DELIMITER = ':';
         const int NO_HIGH_SCORES = 10;
 
+        /// <summary>
+        /// Returns array of high scores.
+        /// </summary>
+        /// <returns>
+        /// Array of tuples containg High Scores with players' names.
+        /// </returns>
         public static Tuple<string, int>[] GetHighScores()
         {
             InitHighScoresFile();
@@ -155,6 +201,17 @@ namespace Bomberman.IO
                 File.AppendAllLines(HIGH_SCORES_FILE_PATH, lines);
             }
         }
+        /// <summary>
+        /// Use this to add a new high score.
+        /// This method automatically checks if the score is in the Top scores.
+        /// If not, the score will not be added.
+        /// </summary>
+        /// <param name="name">
+        /// Player's name
+        /// </param>
+        /// <param name="score">
+        /// Player's score
+        /// </param>
         public static void AddHighScore(string name, int score)
         {
             InitHighScoresFile();
